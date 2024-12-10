@@ -1,0 +1,1298 @@
+<html lang="de"><head>
+    <title>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BAFA - Formular - UBF3 - Anmeldung
+</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex">
+    <meta name="_csrf_parameter" content="_csrf"><meta name="_csrf_header" content="X-XSRF-TOKEN"><meta name="_csrf" content="O37o54W7wxzIAN-6rT2U4t7HtbFZl548tx2A8AEBkY9NEAKhWRjY1LCLpyzlZe2ImBCgh7jzmNBhr68Rgi61yWVgoeooczvC">
+
+    <link href="/BafaFrame/assets/favicon.ico" rel="shortcut icon">
+
+    
+    <link href="/BafaFrame/webjars/bootstrap/css/bootstrap-grid.min.css" rel="stylesheet" type="text/css">
+    <link href="/BafaFrame/webjars/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" type="text/css">
+
+    <!-- jquery webjars -->
+    <link href="/BafaFrame/webjars/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="/BafaFrame/webjars/jquery-ui/jquery-ui.structure.css" rel="stylesheet" type="text/css">
+    <link href="/BafaFrame/assets/css_v2/jquery-ui.theme.css" rel="stylesheet" type="text/css">
+
+    <!-- BAFA CSS -->
+    <link href="/BafaFrame/assets/css_v2/default.css" rel="stylesheet" type="text/css">
+
+    <script src="/BafaFrame/webjars/jquery/jquery.min.js" type="text/javascript"></script>
+    <script src="/BafaFrame/webjars/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+    
+    <script src="/BafaFrame/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    
+        
+            <script src="/BafaFrame/assets/jquery_v2/commons/jquery.timeout.js" type="text/javascript" data-name="session.timeout" data-contextpath="/BafaFrame" data-session-over-text="Ihre Session wurde aufgrund von Inaktivität beendet"></script>
+        
+    
+    <script src="/BafaFrame/assets/jquery/intern/jquery.ienotsupported.js" type="text/javascript"></script>
+    
+    <script src="/BafaFrame/assets/jquery_v2/themeMode.js" type="text/javascript"></script>
+
+    
+    <script src="/BafaFrame/assets/jquery_v2/commons/jquery.commons.js" type="text/javascript" data-name="commons" data-contextpath="/BafaFrame" data-ordername="ubf3">
+    </script>
+    <script src="/BafaFrame/assets/jquery_v2/commons/jquery.ozg.identification.js" type="text/javascript" data-auth_options="{&quot;BEVOLLMAECHTIGTER&quot;:{&quot;ORGANISATION&quot;:[&quot;DIGITAL&quot;,&quot;NONE&quot;],&quot;PRIVATPERSON&quot;:[&quot;DIGITAL&quot;,&quot;NONE&quot;]},&quot;ANTRAGSTELLER&quot;:{&quot;ORGANISATION&quot;:[&quot;DIGITAL&quot;,&quot;NONE&quot;]}}" data-name="ozg.identification">
+    </script>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="container-fluid">
+    <div class="row header-topbar d-none d-md-block"></div>
+    <div class="row">
+        <div class="col-1 d-md-flex d-none"></div>
+        <div class="col-md-10">
+            <div class="d-flex flex-row align-items-center justify-items-start">
+                <div class="emblem-wrapper">
+                    <p>
+                        <a href="http://www.bafa.de" title="www.bafa.de" target="_blank" rel="noopener noreferrer">
+                            <img alt="Bundesamt für Wirtschaft und Ausfuhrkontrolle" src="/BafaFrame/assets/images/bafa-logo.svg">
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="notificationAll">
+                
+            </div>
+
+            
+        </div>
+        <div class="col-1 d-md-flex d-none"></div>
+    </div>
+    <div class="row bafa-divider">
+        <div class="col-1 d-md-flex d-none"></div>
+        <div class="col-md-10 row gx-0 align-items-center bafa-divider-content">
+            
+                
+            
+            
+            <a href="#">Wirtschaft</a>
+        </div>
+        <div class="col-1 d-md-flex d-none"></div>
+    </div>
+
+    <div class="row bafa-divider-links">
+        <div class="col-1 d-md-flex d-none"></div>
+        <div class="col-md-10 row gx-0 justify-content-end bafa-divider-content">
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+        <div class="col-1 d-md-flex d-none"></div>
+    </div>
+</header>
+
+
+<main class="container-fluid">
+    <div class="row">
+        <div class="col-1 d-md-flex d-none bafa-bg-grey"></div>
+        <div class="col-12 col-md-10 page-content-wrapper">
+            
+                
+            
+            
+            
+                
+                    <h1>Antrag auf Förderung einer Unternehmensberatung</h1>
+                
+                
+                 
+                    <p class="title-comment">nach der Richtlinie zur Förderung von Unternehmensberatungen für KMU vom 14.12.2022</p>
+                
+            
+
+            
+                
+
+
+
+
+
+    
+    
+    
+    
+        
+        
+        
+        
+            
+            
+        
+    
+
+    <div class="c-form-ext" aria-hidden="true">
+        <ul class="breadcrumb">
+            <li class="step">
+                
+                    
+                        <strong class="active" title="Daten eingeben">
+                            <span class="aural">Daten eingeben</span><em class="bi bi-pen"></em><span class="aural">: noch offen</span>
+                        </strong>
+                    
+                    
+                
+            </li>
+
+            
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-visited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                        
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-visited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                    
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                                <li class="progressbar width4">
+                                    <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                </li>
+                            
+                            
+                        
+                    
+                
+            
+                
+                    
+                        
+                    
+                    
+                    
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                            
+                                <li class="step">
+                                    <strong class="open" title="Dokumente hochladen">
+                                        <span class="aural">Dokumente hochladen</span><em class="bi bi-file-arrow-up"></em><span class="aural">: offen</span>
+                                    </strong>
+                                </li>
+                                
+                                    <li class="progressbar width4">
+                                        <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                    </li>
+                                
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                        
+                    
+                    
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                            
+                                <li class="step">
+                                    <strong class="open" title="Daten prüfen">
+                                        <span class="aural">Daten prüfen</span><em class="bi bi-list-check"></em><span class="aural">: offen</span>
+                                    </strong>
+                                </li>
+                                
+                                    <li class="progressbar width4">
+                                        <div class="breadcrumb-progress-container breadcrumb-progress-unvisited"></div>
+                                    </li>
+                                
+                            
+                        
+                    
+                
+            
+                
+                    
+                    
+                    
+                        
+                    
+                    
+                
+                
+                
+                    
+                    
+                    
+                        
+                            
+                            
+                                <li class="step">
+                                    <strong class="open" title="Formular absenden">
+                                        <span class="aural">Formular absenden</span><em class="bi bi-send"></em><span class="aural">: offen</span>
+                                    </strong>
+                                </li>
+                                
+                            
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+            
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="ozg-page">
+    
+
+
+    <form id="ozgDto" novalidate="novalidate" action="/BafaFrame/v2/ubf3/ozg" method="post">
+        <h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Anmeldung</h2>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <p class="col-12">
+        <small>Die mit <span class="formAsterics">*</span> gekennzeichneten Felder sind Pflichtfelder.</small>
+    </p>
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+
+
+        
+        <div class="">
+
+        <!-- Angestellter/Bevollmächtigter -->
+        
+            <fieldset>
+                <legend>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Das folgende Formular fülle ich aus:
+                    <span id="personTypeChoiceMandatory" class="formAsterics">*</span>
+                </legend>
+                <div class="row" id="personBlock">
+                    
+                        <div class="radio-col" id="personChoiceANTRAGSTELLER">
+                            <label for="ozgSelection.personTypeText1" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+für mich selbst
+                                <input id="ozgSelection.personTypeText1" name="ozgSelection.personTypeText" required="required" type="radio" value="Antragsteller" checked="checked">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="Antragsteller">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+für mich selbst</strong>
+                            <input id="ozgSelection.personTypeText" name="ozgSelection.personTypeText" value="Antragsteller" type="hidden">
+                        </div>
+                    
+                        <div class="radio-col" id="personChoiceBEVOLLMAECHTIGTER">
+                            <label for="ozgSelection.personTypeText2" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+als bevollmächtigte Person
+                                <input id="ozgSelection.personTypeText2" name="ozgSelection.personTypeText" required="required" type="radio" value="Bevollmächtigter">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="Bevollmächtigter">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+als bevollmächtigte Person</strong>
+                            <input id="ozgSelection.personTypeText" name="ozgSelection.personTypeText" value="Bevollmächtigter" type="hidden">
+                        </div>
+                    
+                    <div role="status">
+                        
+                    </div>
+                </div>
+            </fieldset>
+        
+
+        
+
+            <fieldset>
+                <legend>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ich bin eine:
+                    <span id="orgaTypeChoiceMandatory" class="formAsterics">*</span>
+                </legend>
+                <div class="row" id="orgaBlock">
+                    
+                        <div class="radio-col" id="orgaChoicePRIVATPERSON">
+                            <label for="ozgSelection.ozgOrganisationType1" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Privatperson
+                                <input id="ozgSelection.ozgOrganisationType1" name="ozgSelection.ozgOrganisationType" required="required" type="radio" value="Privatperson">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="Privatperson">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Privatperson</strong>
+                            <input id="ozgSelection.ozgOrganisationType" name="ozgSelection.ozgOrganisationType" value="Privatperson" type="hidden">
+                        </div>
+                    
+                        <div class="radio-col" id="orgaChoiceORGANISATION">
+                            <label for="ozgSelection.ozgOrganisationType2" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Organisation
+                                <input id="ozgSelection.ozgOrganisationType2" name="ozgSelection.ozgOrganisationType" required="required" type="radio" value="Organisation">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="Organisation">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Organisation</strong>
+                            <input id="ozgSelection.ozgOrganisationType" name="ozgSelection.ozgOrganisationType" value="Organisation" type="hidden">
+                        </div>
+                    
+
+                    </div>
+                     <div role="status">
+                            
+                     </div>
+                </fieldset>
+
+            <fieldset>
+                <legend>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ich möchte mich digital authentifizieren:
+                    <span id="authTypeChoiceMandatory" class="formAsterics">*</span></legend>
+                <div class="row" id="authBlock">
+                    
+                        <div class="radio-col" id="authChoiceDIGITAL">
+                            <label for="ozgSelection.authenticationChoice1" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ja
+                                <input id="ozgSelection.authenticationChoice1" name="ozgSelection.authenticationChoice" required="required" type="radio" value="DIGITAL">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="DIGITAL">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ja</strong>
+                            <input id="ozgSelection.authenticationChoice" name="ozgSelection.authenticationChoice" value="DIGITAL" type="hidden">
+                        </div>
+                    
+                        <div class="radio-col" id="authChoiceNONE">
+                            <label for="ozgSelection.authenticationChoice2" class="radiocontainer">
+                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nein
+                                <input id="ozgSelection.authenticationChoice2" name="ozgSelection.authenticationChoice" required="required" type="radio" value="NONE">
+                                <span class="radiocheckmark"></span>
+                            </label>
+                        </div>
+                        <div class="radioOnlyText" id="NONE">
+                            <strong>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Nein</strong>
+                            <input id="ozgSelection.authenticationChoice" name="ozgSelection.authenticationChoice" value="NONE" type="hidden">
+                        </div>
+                    
+                    </div>
+                    <div role="status">
+                            
+                        </div>
+                </fieldset>
+            </div>
+            <div aria-live="polite" id="statusMessage"></div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Resource bundle variables-->
+
+
+<div class="card border-dark mb-3 info-box-card" role="region">
+    <div role="region" aria-label="Info Box">
+        <div class="container">
+            <div class="row">
+                <div class="col-2 card-body text-dark">
+                    <svg class="infobox-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#0978a5" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div class="col-10 info-text">
+                    <p class="card-text">
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mit der Anmeldung können Sie die Vorteile des Nutzerkonto Bund oder von ELSTER UK Mein Unternehmenskonto nutzen. <br><br> Damit können Sie Ihre hinterlegten Kontaktdaten in das Formular übernehmen. Zudem können Ihnen die Bescheide über das Nutzerkonto Bund direkt in Ihr hinterlegtes Postfach zugestellt werden. <br><br> Falls Sie noch kein Konto besitzen, können Sie hierüber auch die Registrierung durchführen. <br><br> Bitte beachten Sie, dass wir für eine Authentifizierung über das ELSTER UK Mein Unternehmenskonto die Nutzung eines Organisationszertifikats voraussetzen. Die Authentifizierung mit einem privaten ELSTER UK Zertifikat ist für Privatpersonen über das Nutzerkonto Bund möglich.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Notification for Authentication services. JS shows and hides them -->
+        <div role="status">
+            <span id="notificationNKB" class="warn displayNone">
+                
+            </span>
+            <span id="notificationELSTER" class="warn displayNone">
+                
+            </span>
+            
+            <!-- error message if the authentication is tied to a foreign address, which is not supported in some cases -->
+            
+        </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="buttonrow">
+        <div class="row row-cols-auto justify-content-center my-5 gx-0">
+            <p class="col">
+                    <button id="back" type="submit" name="back" formnovalidate="" class="btn secondary">
+                        
+                            
+                            
+                                Zurück
+                            
+                        
+                    </button>
+            </p>
+            <p class="col">
+                    <button class="btn" id="next" type="submit" name="next">
+                        
+                            
+                            
+                                Weiter
+                            
+                        
+                    </button>
+            </p>
+        </div>
+    </div>
+
+
+
+        <!-- error message if the user tried to authenticate himself with a private Elster certificate
+        despite being an organisation -->
+        
+    <div>
+<input type="hidden" name="_csrf" value="O37o54W7wxzIAN-6rT2U4t7HtbFZl548tx2A8AEBkY9NEAKhWRjY1LCLpyzlZe2ImBCgh7jzmNBhr68Rgi61yWVgoeooczvC">
+</div></form>
+</section>
+        </div>
+        <div class="col-1 d-md-flex d-none bafa-bg-grey"></div>
+    </div>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <footer class="container-fluid" id="footer" role="contentinfo">
+        <h2 class="sr-only">Unternavigation aller Website-Bereiche</h2>
+        <div class="row" id="siteInfo">
+            <div class="col-1 d-md-flex d-none"></div>
+            <div class="col-12 col-md-10">
+                <div class="row my-3 gx-md-3 gx-lg-3">
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <h3 aria-expanded="false" class="heading inactive-control">Kontakt</h3>
+                        <ul class="footer-list">
+                            <li><a href="https://www.bafa.de/DE/Service/Anreise/anreise_node.html">Anreise</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Newsletter/newsletter_node.html">Newsletter</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/RSSNewsfeed/rssnewsfeed_node.html">RSS</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Twitter/twitter_node.html">Twitter</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Aufgabenuebersicht/modul_aufgabenuebersicht_node.html">Kontakt</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <h3 aria-expanded="false" class="heading inactive-control">Infothek</h3>
+                        <ul class="footer-list">
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Infothek/Infothek_Sucheinstieg_Antraege_Formular.html?nn=8061890&amp;sortOrder.HASH=60e9flIyM9fswAny5LiOmtcJbm6BKBU%3D&amp;documentType_=type_form&amp;sortOrder=dateOfIssue_dt+desc">Anträge/Formulare</a></li>
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Infothek/Infothek_Sucheinstieg_Publikationen_Formular.html?nn=8061890&amp;sortOrder.HASH=1c3cY4dJYUsa4AY8jnx1ZourRDP5VdE%3D&amp;documentType_=type_publication&amp;sortOrder=dateOfIssue_dt+desc">Publikationen</a></li>
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Infothek/Infothek_Sucheinstieg_Rechtsgrundlagen_Formular.html?nn=8061890&amp;sortOrder.HASH=87cdpEG12tiU-vYfSr7t6GNPnTzHjJQ%3D&amp;documentType_=type_legal_basis&amp;sortOrder=dateOfIssue_dt+desc">Rechtsgrundlagen</a></li>
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Infothek/Infothek_Sucheinstieg_Statistik_Formular.html?nn=8061890&amp;sortOrder.HASH=cd45jCCWoPVBrszMq7j1XzgtDsMxHw0%3D&amp;documentType_=type_statistic&amp;sortOrder=dateOfIssue_dt+desc">Statistiken</a></li>
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Infothek/Infothek_Sucheinstieg_Open-data_Formular.html?nn=8061890&amp;sortOrder.HASH=d842qJBxL2tabahiyLXw9-TcRThb-9E%3D&amp;documentType_=type_open_data&amp;sortOrder=dateOfIssue_dt+desc">Open Data</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <h3 aria-expanded="false" class="heading inactive-control">Presse</h3>
+                        <ul class="footer-list">
+                            <li><a href="https://www.bafa.de/DE/Service/Presse/Mediathek/mediathek_node.html">Mediathek</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Presse/Presseanfragen/presseanfragen_node.html">Presseanfragen</a></li>
+                            <li><a href="https://www.bafa.de/SiteGlobals/Forms/Suche/Pressemitteilungen/Pressemitteilungen_Sucheinstieg_Formular.html?nn=8061890&amp;sortOrder.HASH=ed39Ct8kVSNY0Ne3a9HIY_fiWglctGY%3D&amp;documentType_=pressrelease&amp;sortOrder=dateOfIssue_dt+desc">Pressemitteilungen</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <h3 aria-expanded="false" class="heading inactive-control">Service</h3>
+                        <ul class="footer-list">
+                            <li><a href="https://www.bafa.de/DE/Service/Benutzerhinweis/benutzerhinweis_node.html">Benutzerhinweise</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Datenschutzerklaerung/datenschutzerklaerung_node.html">Datenschutzerklärung</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Gebaerdensprache/gebaerdensprache_node.html">Gebärdensprache</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Glossar/glossar_node.html">Glossar</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Impressum/impressum_node.html">Impressum</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Informationsfreiheit/informationsfreiheit_node.html">Informationsfreiheit</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Sitemap/sitemap_node.html">Inhaltsverzeichnis</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Leichte_Sprache/leichtesprache_node.html">Leichte Sprache</a></li>
+                            <li><a href="https://www.bafa.de/DE/Service/Schnittstellen/schnittstellen_node.html">Schnittstellen</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 d-md-flex d-none"></div>
+            <div class="col-1 d-md-flex d-none"></div>
+            <p class="col-10">© 2024 Bundesamt für Wirtschaft und Ausfuhrkontrolle</p>
+            <div class="col-1 d-md-flex d-none"></div>
+        </div>
+
+    </footer>
+
+
+
+<div id="divIdDialog" class="displayNone" title="Bestätigungsanfrage"></div>
+
+    <dialog id="timeoutDialog" class="timeout-dialog timeout-alarm">
+        <p id="timeoutCounter" class="timeout-counter">&nbsp;</p>
+        <p id="timeoutMessageText">
+            
+                Ihre aktuelle Sitzung läuft bald ab, dabei gehen Ihre Daten verloren. <br><br>Drücken Sie eine beliebige Taste, um die Sitzung zu verlängern.
+            
+        </p>
+    </dialog>
+
+
+</body></html>

@@ -1,0 +1,1132 @@
+{
+    "name": "BAFA - neuer Antrag in Seatable",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1681809,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0,
+                    "name": "BAFA-Form Input"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "brain2.de BAFA-Antrag"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "openai-gpt-3:CreateCompletion",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2873062
+            },
+            "mapper": {
+                "select": "chat",
+                "temperature": "0",
+                "top_p": "1",
+                "n_completions": "1",
+                "model": "gpt-4o-mini",
+                "max_tokens": "2048",
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": "# Role\nDu bist Experte darin, die passende Wirtschaftszweigklassifikation (WZ-Kennzahl) zu finden.\n\n# Task\nFinde für eine vom User vorgegebene Branche die passende WZ-Kennzahl aus der vorgegebenen Liste.\n\n# Process\n1. Analysiere die Liste mit WZ-Nummer.\n2. Suche in der Liste die Branche, die am besten zu der vom User beschriebenen Branche passt.\n3. Gib die passende vierstellige WZ-Nummer im Format XXXX zurück. Dein Output muss genau vier Zeichen umfassen und darf neben der WZ-Nummer keine weitere Angeben enthalten.\n\n# Liste mit WZ-Nummern\nWZ-Nummer; Branchenbezeichnung\n0510;Steinkohlenbergbau\n0520;Braunkohlenbergbau\n0610;Gewinnung von Erdöl\n0620;Gewinnung von Erdgas\n0710;Eisenerzbergbau\n0721;Bergbau auf Uran- und Thoriumerze\n0729;Sonstiger NE-Metallerzbergbau\n0811;Gewinnung von Naturwerksteinen und Natursteinen, Kalk- und Gipsstein, Kreide und Schiefer0812 - Gewinnung von Kies, Sand, TKaolin\n0812;Gewinnung von Kies, Sand, Ton und Kaolin\n0891;Bergbau auf chemische und Düngemittelminerale\n0892;Torfgewinnung\n0893;Gewinnung von Salz\n0899;Gewinnung von Steinen und Erden a n g\n0910;Erbringung von Dienstleistungen für die Gewinnung von Erdöl und Erdgas\n0990;Erbringung von Dienstleistungen für den sonstigen Bergbau und die Gewinnung von Steinen und Erden\n1011;Schlachten (ohne Schlachten von Geflügel)\n1012;Schlachten von Geflügel\n1013;Fleischverarbeitung\n1020;Fischverarbeitung\n1031;Kartoffelverarbeitung\n1032;Herstellung von Frucht- und Gemüsesäften\n1039;Sonstige Verarbeitung von Obst und Gemüse\n1041;Herstellung von Ölen und Fetten (ohne Margarine uä Nahrungsfette)\n1042;Herstellung von Margarine u ä Nahrungsfetten\n1051;Milchverarbeitung (ohne Herstellung von Speiseeis)\n1052;Herstellung von Speiseeis\n1061;Mahl- und Schälmühlen\n1062;Herstellung von Stärke und Stärkeerzeugnissen\n1071;Herstellung von Backwaren (ohne Dauerbackwaren)\n1072;Herstellung von Dauerbackwaren\n1073;Herstellung von Teigwaren\n1081;Herstellung von Zucker\n1082;Herstellung von Süßwaren (ohne Dauerbackwaren)\n1083;Verarbeitung von Kaffee und Tee, Herstellung von Kaffee-Ersatz\n1084;Herstellung von Würzmitteln und Soßen\n1085;Herstellung von Fertiggerichten\n1086;Herstellung von homogenisierten und diätetischen Nahrungsmitteln\n1089;Herstellung von sonstigen Nahrungsmitteln an g\n1091;Herstellung von Futtermitteln für Nutztiere\n1092;Herstellung von Futtermitteln für sonstige Tiere\n1101;Herstellung von Spirituosen\n1102;Herstellung von Traubenwein\n1103;Herstellung von Apfelwein und anderen Fruchtweinen\n1104;Herstellung von Wermutwein und sonstigen aromatisierten Weinen\n1105;Herstellung von Bier\n1106;Herstellung von Malz\n1107;\"Herstellung von Erfrischungsgetränken; Gewinnung natürlicher Mineralwässer\"\n1200;Tabakverarbeitung\n1310;Spinnstoffaufbereitung und Spinnerei\n1320;Weberei\n1330;Veredlung von Textilien und Bekleidung\n1391;Herstellung von gewirktem und gestricktem Stoff\n1392;Herstellung von konfektionierten Textilwaren (ohne Bekleidung)\n1393;Herstellung von Teppichen\n1394;Herstellung von Seilerwaren\n1395;Herstellung von Vliesstoff und Erzeugnissen daraus (ohne Bekleidung)\n1396;Herstellung von technischen Textilien\n1399;Herstellung von sonstigen Textilwaren a n g\n1411;Herstellung von Lederbekleidung\n1412;Herstellung von Arbeits- und Berufsbekleidung\n1413;Herstellung von sonstiger Oberbekleidung\n1414;Herstellung von Wäsche\n1419;Herstellung von sonstiger Bekleidung und Bekleidungszubehör a n g\n1420;Herstellung von Pelzwaren\n1431;Herstellung von Strumpfwaren\n1439;Herstellung von sonstiger Bekleidung aus gewirktem und gestricktem Stoff\n1511;\"Herstellung von Leder und Lederfaserstoff; Zurichtung und Färben von Fellen\"\n1512;Lederverarbeitung (ohne Herstellung von Lederbekleidung)\n1520;Herstellung von Schuhen\n1610;Säge-, Hobel- und Holzimprägnierwerke\n1621;Herstellung von Furnier-, Sperrholz-, Holzfaser- und Holzspanplatten\n1622;Herstellung von Parketttafel\n1623;Herstellung von sonstigen Konstruktionsteilen, Fertigbauteilen, Ausbauelementen und Fertigteilbauten aus Holz\n1624;Herstellung von Verpackungsmitteln, Lagerbehältern und Ladungsträgern aus Holz\n1629;Herstellung von Holzwaren a n g, Kork-, Flecht- und Korbwaren (ohne Möbel)\n1711;Herstellung von Holz- und Zellstoff\n1712;Herstellung von Papier, Karton und Pappe\n1721;Herstellung von Wellpapier und -pappe sowie von Verpackungsmitteln aus Papier, Karton und Pappe\n1722;Herstellung von Haushalts-, Hygiene- und Toilettenartikeln aus Zellstoff, Papier und Pappe\n1723;Herstellung von Schreibwaren und Bürobedarf aus Papier, Karton und Pappe\n1724;Herstellung von Tapeten\n1729;Herstellung von sonstigen Waren aus Papier, Karton und Pappe\n1811;Drucken von Zeitungen\n1812;Drucken an g\n1813;Druck- und Medienvorstufe\n1814;Binden von Druckerzeugnissen und damit verbundene Dienstleistungen\n1820;Vervielfältigung von bespielten Ton-, Bild- und Datenträgern\n1910;Kokerei\n1920;Mineralölverarbeitung\n2011;Herstellung von Industriegasen\n2012;Herstellung von Farbstoffen und Pigmenten\n2013;Herstellung von sonstigen anorganischen Grundstoffen und Chemikalien\n2014;Herstellung von sonstigen organischen Grundstoffen und Chemikalien\n2015;Herstellung von Düngemitteln und Stickstoffverbindungen\n2016;Herstellung von Kunststoffen in Primärformen\n2017;Herstellung von synthetischem Kautschuk in Primärformen\n2020;Herstellung von Schädlingsbekämpfungs-, Pflanzenschutz- und Desinfektionsmitteln\n2030;Herstellung von Anstrichmitteln, Druckfarben und Kitten\n2041;Herstellung von Seifen, Wasch-, Reinigungs- und Poliermitteln\n2042;Herstellung von Körperpflegemitteln und Duftstoffen\n2051;Herstellung von pyrotechnischen Erzeugnissen\n2052;Herstellung von Klebstoffen\n2053;Herstellung von etherischen Ölen\n2059;Herstellung von sonstigen chemischen Erzeugnissen a n g\n2060;Herstellung von Chemiefasern\n2110;Herstellung von pharmazeutischen Grundstoffen\n2120;Herstellung von pharmazeutischen Spezialitäten und sonstigen pharmazeutischen Erzeugnissen\n2211;Herstellung und Runderneuerung von Bereifungen\n2219;Herstellung von sonstigen Gummiwaren\n2221;Herstellung von Platten, Folien, Schläuchen und Profilen aus Kunststoffen\n2222;Herstellung von Verpackungsmitteln aus Kunststoffen\n2223;Herstellung von Baubedarfsartikeln aus Kunststoffen\n2229;Herstellung von sonstigen Kunststoffwaren\n2311;Herstellung von Flachglas\n2312;Veredlung und Bearbeitung von Flachglas\n2313;Herstellung von Hohlglas\n2314;Herstellung von Glasfasern und Waren daraus\n2319;Herstellung, Veredlung und Bearbeitung von sonstigem Glas einschließlich technischen Glaswaren\n2320;Herstellung von feuerfesten keramischen Werkstoffen und Waren\n2331;Herstellung von keramischen Wand- und Bodenfliesen und -platten\n2332;Herstellung von Ziegeln und sonstiger Baukeramik\n2341;Herstellung von keramischen Haushaltswaren und Ziergegenständen\n2342;Herstellung von Sanitärkeramik\n2343;Herstellung von Isolatoren und Isolierteilen aus Keramik\n2344;Herstellung von keramischen Erzeugnissen für sonstige technische Zwecke\n2349;Herstellung von sonstigen keramischen Erzeugnissen\n2351;Herstellung von Zement\n2352;Herstellung von Kalk und gebranntem Gips\n2361;Herstellung von Erzeugnissen aus Beton, Zement und Kalksandstein für den Bau\n2362;Herstellung von Gipserzeugnissen für den Bau\n2363;Herstellung von Frischbeton (Transportbeton)\n2364;Herstellung von Mörtel und anderem Beton (Trockenbeton)\n2365;Herstellung von Faserzementwaren\n2369;Herstellung von sonstigen Erzeugnissen aus Beton, Zement und Gips an g\n2370;Be- und Verarbeitung von Naturwerksteinen und Natursteinen an g\n2391;Herstellung von Schleifkörpern und Schleifmitteln auf Unterlage\n2399;Herstellung von sonstigen Erzeugnissen aus nichtmetallischen Mineralien a n g\n2420;Herstellung von Stahlrohren, Rohrform-, Rohrverschluss- und Rohrverbindungsstücken aus Stahl\n2431;Herstellung von Blankstahl\n2432;Herstellung von Kaltband mit einer Breite von weniger als 600 mm\n2433;Herstellung von Kaltprofilen\n2434;Herstellung von kaltgezogenem Draht\n2441;Erzeugung und erste Bearbeitung von Edelmetallen\n2442;Erzeugung und erste Bearbeitung von Aluminium\n2443;Erzeugung und erste Bearbeitung von Blei, Zink und Zinn\n2444;Erzeugung und erste Bearbeitung von Kupfer\n2445;Erzeugung und erste Bearbeitung von sonstigen NE-Metallen\n2446;Aufbereitung von Kernbrennstoffen\n2451;Eisengießereien\n2452;Stahlgießereien\n2453;Leichtmetallgießereien\n2454;Buntmetallgießereien\n2550;Herstellung von Schmiede-, Press-, Zieh- und Stanzteilen, gewalzten Ringen und pulvermetallurgischen Erzeugnissen\n2561;Oberflächenveredlung und Wärmebehandlung\n2562;Mechanik a n g\n2571;Herstellung von Schneidwaren und Bestecken aus unedlen Metallen\n2572;Herstellung von Schlössern und Beschlägen aus unedlen Metallen\n2573;Herstellung von Werkzeugen\n2591;Herstellung von Fässern, Trommeln, Dosen, Eimern u ä Behältern aus Metall\n2592;Herstellung von Verpackungen und Verschlüssen aus Eisen, Stah\n2593;Herstellung von Drahtwaren, Ketten und Federn\n2594;Herstellung von Schrauben und Nieten\n2599;Herstellung von sonstigen Metallwaren a n g\n2612;Herstellung von bestückten Leiterplatten\n2670;Herstellung von optischen und fotografischen Instrumenten und Geräten\n2680;Herstellung von magnetischen und optischen Datenträgern\n2711;Herstellung von Elektromotoren, Generatoren und Transformatoren\n2712;Herstellung von Elektrizitätsverteilungs- und -schalteinrichtungen\n2720;Herstellung von Batterien und Akkumulatoren\n2733;Herstellung von elektrischem Installationsmaterial\n2790;Herstellung von sonstigen elektrischen Ausrüstungen und Geräten a n g\n2811;Herstellung von Verbrennungsmotoren und Turbinen (ohne Motoren für Luft- und Straßenfahrzeuge)\n2812;Herstellung von hydraulischen und pneumatischen Komponenten und Systemen\n2813;Herstellung von Pumpen und Kompressoren a n g\n2814;Herstellung von Armaturen a n g\n2815;Herstellung von Lagern, Getrieben, Zahnrädern und Antriebselementen\n2821;Herstellung von Öfen und Brennern\n2822;Herstellung von Hebezeugen und Fördermitteln\n2823;Herstellung von Büromaschinen (ohne Datenverarbeitungsgeräte und periphere Geräte)\n2824;Herstellung von handgeführten Werkzeugen mit Motorantrieb\n2825;Herstellung von kälte- und lufttechnischen Erzeugnissen, nicht für den Haushalt\n2829;Herstellung von sonstigen nicht wirtschaftszweigspezifischen Maschinen a n g\n2830;Herstellung von land- und forstwirtschaftlichen Maschinen\n2841;Herstellung von Werkzeugmaschinen für die Metallbearbeitung\n2849;Herstellung von sonstigen Werkzeugmaschinen\n2910;Herstellung von Kraftwagen und Kraftwagenmotoren\n2920;Herstellung von Karosserien, Aufbauten und Anhängern\n2931;Herstellung elektrischer und elektronischer Ausrüstungsgegenstände für Kraftwagen\n2932;Herstellung von sonstigen Teilen und sonstigem Zubehör für Kraftwagen\n3011;Schiffbau (ohne Boots- und Yachtbau)\n3012;Boots- und Yachtbau\n3020;Schienenfahrzeugbau\n3030;Luft- und Raumfahrzeugbau\n3040;Herstellung von militärischen Kampffahrzeugen\n3091;Herstellung von Krafträdern\n3092;Herstellung von Fahrrädern sowie von Behindertenfahrzeugen\n3099;Herstellung von sonstigen Fahrzeugen a n g\n3101;Herstellung von Büro- und Ladenmöbeln\n3102;Herstellung von Küchenmöbeln\n3103;Herstellung von Matratzen\n3109;Herstellung von sonstigen Möbeln\n3211;Herstellung von Münzen\n3212;Herstellung von Schmuck, Gold- und Silberschmiedewaren (ohne Fantasieschmuck)\n3213;Herstellung von Fantasieschmuck\n3220;Herstellung von Musikinstrumenten\n3230;Herstellung von Sportgeräten\n3240;Herstellung von Spielwaren\n3250;Herstellung von medizinischen und zahnmedizinischen Apparaten und Materialien\n3291;Herstellung von Besen und Bürsten\n3299;Herstellung von sonstigen Erzeugnissen a n g\n3311;Reparatur von Metallerzeugnissen\n3312;Reparatur von Maschinen\n3313;Reparatur von elektronischen und optischen Geräten\n3314;Reparatur von elektrischen Ausrüstungen\n3315;Reparatur und Instandhaltung von Schiffen, Booten und Yachten\n3316;Reparatur und Instandhaltung von Luft- und Raumfahrzeugen\n3317;Reparatur und Instandhaltung von Fahrzeugen a n g\n3319;Reparatur von sonstigen Ausrüstungen\n3320;Installation von Maschinen und Ausrüstungen a n g\n3511;Elektrizitätserzeugung\n3512;Elektrizitätsübertragung\n3513;Elektrizitätsverteilung\n3514;Elektrizitätshandel\n3521;Gaserzeugung\n3522;Gasverteilung durch Rohrleitungen\n3523;Gashandel durch Rohrleitungen\n3530;Wärme- und Kälteversorgung\n3600;Wasserversorgung\n3700;Abwasserentsorgung\n3811;Sammlung nicht gefährlicher Abfälle\n3812;Sammlung gefährlicher Abfälle\n3821;Behandlung und Beseitigung nicht gefährlicher Abfälle\n3822;Behandlung und Beseitigung gefährlicher Abfälle\n3831;Zerlegen von Schiffs- und Fahrzeugwracks und anderen Altwaren\n3832;Rückgewinnung sortierter Werkstoffe\n3900;Beseitigung von Umweltverschmutzungen und sonstige Entsorgung\n4211;Bau von Straßen\n4212;Bau von Bahnverkehrsstrecken\n4311;Abbrucharbeiten\n4312;Vorbereitende Baustellenarbeiten\n4313;Test- und Suchbohrung\n4321;Elektroinstallation\n4322;Gas-, Wasser-, Heizungs- sowie Lüftungs- und Klimainstallation\n4329;Sonstige Bauinstallation\n4331;Anbringen von Stuckaturen, Gipserei und Verputzerei\n4332;Bautischlerei und -schlosserei\n4333;Fußboden-, Fliesen- und Plattenlegerei, Tapeziererei\n4511;Handel mit Kraftwagen mit einem Gesamtgewicht von 3,5 t oder weniger\n4519;Handel mit Kraftwagen mit einem Gesamtgewicht von mehr als 3,5 t\n4520;Instandhaltung und Reparatur von Kraftwagen\n4531;Großhandel mit Kraftwagenteilen und -zubehör\n4532;Einzelhandel mit Kraftwagenteilen und -zubehör\n4540;\"Handel mit Krafträdern, Kraftradteilen und -zubehör; Instandhaltung und Reparatur von Krafträdern\"\n4611;Handelsvermittlung von landwirtschaftlichen Grundstoffen, lebenden Tieren, textilen Rohstoffen und Halbwaren\n4612;Handelsvermittlung von Brennstoffen, Erzen, Metallen und technischen Chemikalien\n4613;Handelsvermittlung von Holz, Baustoffen und Anstrichmitteln\n4614;Handelsvermittlung von Maschinen, technischem Bedarf, Wasser-und Luftfahrzeugen\n4615;Handelsvermittlung von Möbeln, Einrichtungs- und Haushaltsgegenständen, Eisen- und Metallwaren\n4616;Handelsvermittlung von Textilien, Bekleidung, Schuhen und Lederwaren\n4617;Handelsvermittlung von Nahrungsmitteln, Getränken und Tabakwaren\n4618;Handelsvermittlung von sonstigen Waren\n4619;Handelsvermittlung von Waren ohne ausgeprägten Schwerpunkt\n4621;Großhandel mit Getreide, Rohtabak, Saatgut und Futtermitteln\n4622;Großhandel mit Blumen und Pflanzen\n4623;Großhandel mit lebenden Tieren\n4624;Großhandel mit Häuten, Fellen und Leder\n4631;Großhandel mit Obst, Gemüse und Kartoffeln\n4632;Großhandel mit Fleisch und Fleischwaren\n4633;Großhandel mit Milch, Milcherzeugnissen, Eiern, Speiseölen und Nahrungsfetten\n4634;Großhandel mit Getränken\n4635;Großhandel mit Tabakwaren\n4636;Großhandel mit Zucker, Süßwaren und Backwaren\n4637;Großhandel mit Kaffee, Tee, Kakao und Gewürzen\n4638;Großhandel mit sonstigen Nahrungs- und Genussmitteln\n4639;Großhandel mit Nahrungs- und Genussmitteln, Getränken und Tabakwaren, ohne ausgeprägten S\n4641;Großhandel mit Textilien\n4642;Großhandel mit Bekleidung und Schuhen\n4643;Großhandel mit Foto- und optischen Erzeugnissen, elektrischen Haushaltsgeräten und Geräten der Unterhaltungselektronik\n4644;Großhandel mit keramischen Erzeugnissen, Glaswaren und Reinigungsmitteln\n4645;Großhandel mit kosmetischen Erzeugnissen und Körperpflegemitteln\n4646;Großhandel mit pharmazeutischen, medizinischen und orthopädischen Erzeugnissen\n4647;Großhandel mit Möbeln, Teppichen, Lampen und Leuchten\n4648;Großhandel mit Uhren und Schmuck\n4649;Großhandel mit sonstigen Gebrauchs- und Verbrauchsgütern\n4651;Großhandel mit Datenverarbeitungsgeräten, peripheren Geräten und Software\n4652;Großhandel mit elektronischen Bauteilen und Telekommunikationsgeräten\n4661;Großhandel mit landwirtschaftlichen Maschinen und Geräten\n4662;Großhandel mit Werkzeugmaschinen\n4663;Großhandel mit Bergwerks-, Bau- und Baustoffmaschinen\n4664;Großhandel mit Textil-, Näh- und Strickmaschinen\n4665;Großhandel mit Büromöbeln\n4666;Großhandel mit sonstigen Büromaschinen und -einrichtungen\n4669;Großhandel mit sonstigen Maschinen und Ausrüstungen\n4671;Großhandel mit festen Brennstoffen und Mineralölerzeugnissen\n4672;Großhandel mit Erzen, Metallen und Metallhalbzeug\n4673;Großhandel mit Holz, Baustoffen, Anstrichmitteln und Sanitärkeramik\n4674;Großhandel mit Metall- und Kunststoffwaren für Bauzwecke sowie Installationsbedarf für Gas, Wasser und Heizung\n4675;Großhandel mit chemischen Erzeugnissen\n4676;Großhandel mit sonstigen Halbwaren\n4677;Großhandel mit Altmaterialien und Reststoffen\n4690;Großhandel ohne ausgeprägten Schwerpunkt\n4721;Einzelhandel mit Obst, Gemüse und Kartoffeln\n4722;Einzelhandel mit Fleisch und Fleischwaren\n4723;Einzelhandel mit Fisch, Meeresfrüchten und Fischerzeugnissen\n4724;Einzelhandel mit Back- und Süßwaren\n4725;Einzelhandel mit Getränken\n4726;Einzelhandel mit Tabakwaren\n4729;Sonstiger Einzelhandel mit Nahrungs- und Genussmitteln\n4730;Einzelhandel mit Motorenkraftstoffen (Tankstellen)\n4741;Einzelhandel mit Datenverarbeitungsgeräten, peripheren Geräten und Software\n4742;Einzelhandel mit Telekommunikationsgeräten\n4743;Einzelhandel mit Geräten der Unterhaltungselektronik\n4751;Einzelhandel mit Textilien\n4752;Einzelhandel mit Metallwaren, Anstrichmitteln, Bau- und Heimwerkerbedarf\n4753;Einzelhandel mit Vorhängen, Teppichen, Fußbodenbelägen und Tapeten\n4754;Einzelhandel mit elektrischen Haushaltsgeräten\n4759;Einzelhandel mit Möbeln, Einrichtungsgegenständen und sonstigem Hausrat\n4761;Einzelhandel mit Büchern\n4762;Einzelhandel mit Zeitschriften, Zeitungen, Schreibwaren und Bürobedarf\n4763;Einzelhandel mit bespielten Ton- und Bildträgern\n4764;Einzelhandel mit Fahrrädern, Sport- und Campingartikeln\n4765;Einzelhandel mit Spielwaren\n4771;Einzelhandel mit Bekleidung\n4772;Einzelhandel mit Schuhen und Lederwaren\n4773;Apotheken\n4774;Einzelhandel mit medizinischen und orthopädischen Artikeln\n4775;Einzelhandel mit kosmetischen Erzeugnissen und Körperpflegemitteln\n4776;Einzelhandel mit Blumen, Pflanzen, Sämereien, Düngemitteln, zoologischem Bedarf und lebenden Tieren\n4777;Einzelhandel mit Uhren und Schmuck\n4778;Sonstiger Einzelhandel in Verkaufsräumen (ohne Antiquitäten und Gebrauchtwaren)\n4779;Einzelhandel mit Antiquitäten und Gebrauchtwaren\n4781;Einzelhandel mit Nahrungs- und Genussmitteln, Getränken und Tabakwaren an Verkaufsständen und auf Märkten\n4782;Einzelhandel mit Textilien, Bekleidung und Schuhen an Verkaufsständen und auf Märkten\n4789;Einzelhandel mit sonstigen Gütern an Verkaufsständen und auf Märkten\n4791;Versand- und Internet-Einzelhandel\n4799;Sonstiger Einzelhandel, nicht in Verkaufsräumen, an Verkaufsständen oder auf Märkten\n5010;Personenbeförderung in der See- und Küstenschifffahrt\n5020;Güterbeförderung in der See- und Küstenschifffahrt\n5030;Personenbeförderung in der Binnenschifffahrt\n5040;Güterbeförderung in der Binnenschifffahrt\n5110;Personenbeförderung in der Luftfahrt\n5121;Güterbeförderung in der Luftfahrt\n5122;Raumtransport\n5210;Lagerei\n5221;Erbringung von sonstigen Dienstleistungen für den Landverkehr\n5222;Erbringung von sonstigen Dienstleistungen für die Schifffahrt\n5223;Erbringung von sonstigen Dienstleistungen für die Luftfahrt\n5224;Frachtumschlag\n5229;Erbringung von sonstigen Dienstleistungen für den Verkehr a n g\n5310;Postdienste von Universaldienstleistungsanbietern\n5320;Sonstige Post-, Kurier- und Expressdienste\n5510;Hotels, Gasthöfe und Pensionen\n5520;Ferienunterkünfte und ähnliche\n5530;Campingplätze\n5590;Sonstige Beherbergungsstätten\n5610;Restaurants, Gaststätten, Imbissstuben, Cafés, Eissalons u Ä\n5621;Event-Caterer\n5629;Erbringung sonstiger Verpflegungsdienstleistungen\n5630;Ausschank von Getränken\n5811;Verlegen von Büchern\n5812;Verlegen von Adressbüchern und Verzeichnissen\n5813;Verlegen von Zeitungen\n5814;Verlegen von Zeitschriften\n5819;Sonstiges Verlagswesen (ohne Software)\n5821;Verlegen von Computerspielen\n5829;Verlegen von sonstiger Software\n5911;Herstellung von Filmen, Videofilmen und Fernsehprogrammen\n5912;Nachbearbeitung und sonstige Filmtechnik\n5913;Filmverleih und -vertrieb (ohne Videotheken)\n5914;Kinos\n5920;\"Tonstudios; Herstellung von Hörfunkbeiträgen; Verlegen von bespielten Tonträgern und Musikalien\"\n6010;Hörfunkveranstalter\n6020;Fernsehveranstalter\n6110;Leitungsgebundene Telekommunikation\n6120;Drahtlose Telekommunikation\n6130;Satellitentelekommunikation\n6190;Sonstige Telekommunikation\n6201;Erbringung von Beratungsleistungen auf dem Gebiet der Informationstechnologie\n6202;Erbringung von Beratungsleistungen auf dem Gebiet der Informationstechnologie\n6203;Betrieb von Datenverarbeitungseinrichtungen für Dritte\n6209;Erbringung von sonstigen Dienstleistungen der Informationstechnologie\n6311;Datenverarbeitung, Hosting und damit verbundene Tätigkeiten\n6312;Webportale\n6391; Korrespondenz- und Nachrichtenbüros\n6399;Erbringung von sonstigen Informationsdienstleistungen a n g\n6411;Zentralbanken\n6419;Kreditinstitute (ohne Spezialkreditinstitute)\n6420;Beteiligungsgesellschaften\n6430;Treuhand- und sonstige Fonds und ähnliche Finanzinstitutionen\n6491;Institutionen für Finanzierungsleasing\n6492;Spezialkreditinstitute\n6499;Erbringung von sonstigen Finanzdienstleistungen a n g\n6511;Lebensversicherungen\n6512;Nichtlebensversicherungen\n6520;Rückversicherungen\n6530;Pensionskassen und Pensionsfonds\n6611;Effekten- und Warenbörsen\n6612;Effekten- und Warenhandel\n6619;Sonstige mit Finanzdienstleistungen verbundene Tätigkeiten\n6621;Risiko- und Schadensbewertung\n6622;Tätigkeit von Versicherungsmaklerinnen und -maklern\n6629;Sonstige mit Versicherungsdienstleistungen und Pensionskassen verbundene Tätigkeiten\n6630;Fondsmanagement\n6810;Kauf und Verkauf von eigenen Grundstücken, Gebäuden und Wohnungen\n6820;Vermietung, Verpachtung von eigenen oder geleasten Grundstücken, Gebäuden und Wohnungen\n6831;Vermittlung von Grundstücken, Gebäuden und Wohnungen für Dritte\n6832;Verwaltung von Grundstücken, Gebäuden und Wohnungen für Dritte\n6910;Rechtsberatung\n6920;\"Wirtschaftsprüfung und Steuerberatung; Buchführung\"\n7010;Verwaltung und Führung von Unternehmen und Betrieben\n7021;Public-Relations-Beratung\n7022;Unternehmensberatung\n7111;Architekturbüros\n7112;Ingenieurbüros\n7120;Technische, physikalische und chemische Untersuchung\n7211;Forschung und Entwicklung im Bereich Biotechnologie\n7219;Sonstige Forschung und Entwicklung im Bereich Natur, Ingenieur-, Agrarwissenschaften und Medizin\n7220;Forschung und Entwicklung im Bereich Rechts-, Wirtschafts- und Sozialwissenschaften sowie im Bereich Sprach-, Kultur- und Kunstwissenschaften\n7311;Werbeagenturen\n7312;Vermarktung und Vermittlung von Werbezeiten und Werbeflächen\n7320;Markt- und Meinungsforschung\n7410;Ateliers für Textil-, Schmuck-, Grafik- u ä Design\n7420;Fotografie und Fotolabors\n7430;Übersetzen und Dolmetschen\n7490;Sonstige freiberufliche, wissenschaftliche und technische Tätigkeiten an g\n7500;Veterinärwesen\n7711;Vermietung von Kraftwagen mit einem Gesamtgewicht von 3,5 t oder weniger\n7712;Vermietung von Kraftwagen mit einem Gesamtgewicht von mehr als 3,5 t\n7721;Vermietung von Sport- und Freizeitgeräten\n7722;Videotheken\n7729;Vermietung von sonstigen Gebrauchsgütern\n7731;Vermietung von landwirtschaftlichen Maschinen und Geräten\n7732;Vermietung von Baumaschinen und -geräten\n7733;Vermietung von Büromaschinen, Datenverarbeitungsgeräten und - einrichtungen\n7734;Vermietung von Wasserfahrzeugen\n7735;Vermietung von Luftfahrzeugen\n7739;Vermietung von sonstigen Maschinen, Geräten und beweglichen Sachen an g\n7740;Leasing von nichtfinanziellen immateriellen Vermögensgegenständen (ohne Copyrights)\n7810;Vermittliung von Arbeitskräften\n7830;Sonstige Überlassung von Arbeitskräften\n7911;Reisebüros\n7912;Reiseveranstalter\n7990;Erbringung sonstiger Reservierungsdienstleistungen\n8010;Private Wach- und Sicherheitsdienste\n8020;Sicherheitsdienste mithilfe von Überwachungs- und Alarmsystemen\n8030;Detekteien\n8110;Hausmeisterdienste\n8121;Allgemeine Gebäudereinigung\n8122;Spezielle Reinigung von Gebäuden und Reinigung von Maschinen\n8129;Reinigung a n g\n8130;Garten- und Landschaftsbau sowie Erbringung von sonstigen gärtnerischen Dienstleistungen\n8211;Allgemeine Sekretariats- und Schreibdienste\n8219;\"Copy-Shops; Dokumentenvorbereitung und Erbringung sonstiger spezieller Sekretariatsdienste\"\n8220;Call Center\n8230;Messe-, Ausstellungs- und Kongressveranstalter\n8291;Inkassobüros und Auskunfteien\n8292;Abfüllen und Verpacken\n8299;Erbringung sonstiger wirtschaftlicher Dienstleistungen für Unternehmen und Privatpersonen an g\n8411;Allgemeine öffentliche Verwaltung\n8412;Öffentliche Verwaltung auf den Gebieten Gesundheitswesen, Bildung, Kultur und Sozialwesen\n8413;Wirtschaftsförderung, -ordnung und -aufsicht\n8421;Auswärtige Angelegenheiten\n8422;Verteidigung\n8423;Rechtspflege\n8424;Öffentliche Sicherheit und Ordnung\n8425;Feuerwehren\n8430;Sozialversicherung\n8510;Kindergärten und Vorschulen\n8520;Grundschulen\n8531;Allgemein bildende weiterführende Schulen\n8532;Berufsbildende weiterführende Schulen\n8541;Post-sekundärer, nicht tertiärer Unterricht\n8542;Tertiärer Unterricht\n8551;Sport- und Freizeitunterricht\n8552;Kulturunterricht\n8553;Fahr- und Flugschulen\n8559;Sonstiger Unterricht an g\n8560;Erbringung von Dienstleistungen für den Unterricht\n8610;Krankenhäuser\n8621;Arztpraxen für Allgemeinmedizin\n8622;Facharztpraxen\n8623;Zahnarztpraxen\n8690;Gesundheitswesen an g\n8710;Pflegeheime\n8720;Stationäre Einrichtungen zur psychosozialen Betreuung, Suchtbekämpfung u Ä\n8730;\"Altenheime; Alten- und Behindertenwohnheime\"\n8790;Sonstige Heime (ohne Erholungs- und Ferienheime)\n8810;Soziale Betreuung älterer Menschen und Behinderter\n8891;Tagesbetreuung von Kindern\n8899;Sonstiges Sozialwesen a n g\n9001;Darstellende Kunst\n9002;Erbringung von Dienstleistungen für die darstellende Kunst\n9003;Künstlerisches und schriftstellerisches Schaffen\n9004;Betrieb von Kultur- und Unterhaltungseinrichtungen\n9101;Bibliotheken und Archive\n9102;Museen\n9103;Betrieb von historischen Stätten und Gebäuden und ähnlichen Attraktionen\n9104;Botanische und zoologische Gärten sowie Naturparks\n9200;Spiel-, Wett- und Lotteriewesen\n9311;Betrieb von Sportanlagen\n9312;Sportvereine\n9313;Fitnesszentren\n9319;Erbringung von sonstigen Dienstleistungen des Sports\n9321;Vergnügungs- und Themenparks\n9329;Erbringung von Dienstleistungen der Unterhaltung und der Erholung a n g\n9411;Wirtschafts- und Arbeitgeberverbände\n9412;Berufsorganisationen\n9420;Arbeitnehmervereinigungen\n9491;Kirchliche und sonstige religiöse Vereinigungen\n9492;Politische Parteien und Vereinigungen\n9499;Sonstige Interessenvertretungen und Vereinigungen an g\n9511;Reparatur von Datenverarbeitungsgeräten und peripheren Geräten\n9512;Reparatur von Telekommunikationsgeräten\n9521;Reparatur von Geräten der Unterhaltungselektronik\n9522;Reparatur von elektrischen Haushaltsgeräten und Gartengeräten\n9523;Reparatur von Schuhen und Lederwaren\n9524;Reparatur von Möbeln und Einrichtungsgegenständen\n9525;Reparatur von Uhren und Schmuck\n9529;Reparatur von sonstigen Gebrauchsgütern\n9601;Wäscherei und chemische Reinigung\n9602;Frisör- und Kosmetiksalons\n9603;Bestattungswesen\n9604;Saunas, Solarien, Bäder u A\n9609;Erbringung von sonstigen Dienstleistungen a n g\n9700;Private Haushalte mit Hauspersonal\n9810;Herstellung von Waren durch private Haushalte für den Eigenbedarf ohne ausgeprägten Schwerpunkt\n9820;Erbringungen von Dienstleistungen durch private Haushalte für den Eigenbedarf ohne ausgeprägten Schwerpunkt\n9900;Exterritoriale Organisationen und Körperschaften"
+                    },
+                    {
+                        "role": "user",
+                        "content": "Finde die vierstellige WZ-Nummer für ein Unternehmen in der Branche \"{{1.`Kurzbeschreibung der Branche`}}\".",
+                        "imageDetail": "auto"
+                    }
+                ],
+                "response_format": "text"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 346,
+                    "y": -1,
+                    "name": "Finde WZ"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Brain2 OpenAI connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "select": {
+                            "label": "Create a Chat Completion (GPT and o1 models)"
+                        },
+                        "logit_bias": {
+                            "mode": "chose"
+                        },
+                        "stop": {
+                            "mode": "chose"
+                        },
+                        "additionalParameters": {
+                            "mode": "chose"
+                        },
+                        "model": {
+                            "mode": "chose",
+                            "label": "gpt-4o-mini (system)"
+                        },
+                        "messages": {
+                            "mode": "chose",
+                            "items": [
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "System"
+                                    }
+                                },
+                                {
+                                    "role": {
+                                        "mode": "chose",
+                                        "label": "User"
+                                    },
+                                    "imageInputType": {
+                                        "mode": "chose",
+                                        "label": "Empty"
+                                    },
+                                    "imageDetail": {
+                                        "mode": "chose",
+                                        "label": "Auto"
+                                    }
+                                }
+                            ]
+                        },
+                        "response_format": {
+                            "mode": "chose",
+                            "label": "Text"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Select Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "chat",
+                                "prompt"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "n_completions",
+                        "type": "number",
+                        "label": "Number"
+                    },
+                    {
+                        "name": "frequency_penalty",
+                        "type": "number",
+                        "label": "Frequency Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "presence_penalty",
+                        "type": "number",
+                        "label": "Presence Penalty",
+                        "validate": {
+                            "max": 2,
+                            "min": -2
+                        }
+                    },
+                    {
+                        "name": "logit_bias",
+                        "type": "array",
+                        "label": "Token Probability",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "token",
+                                    "type": "text",
+                                    "label": "Token ID",
+                                    "required": true
+                                },
+                                {
+                                    "name": "probability",
+                                    "type": "number",
+                                    "label": "Probability",
+                                    "required": true,
+                                    "validate": {
+                                        "max": 100,
+                                        "min": -100
+                                    }
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Token Probability",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "seed",
+                        "type": "integer",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "stop",
+                        "type": "array",
+                        "label": "Stop Sequences",
+                        "validate": {
+                            "maxItems": 4
+                        },
+                        "spec": {
+                            "type": "text",
+                            "label": "Stop Sequence",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "additionalParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "key",
+                                    "type": "text",
+                                    "label": "Parameter Name",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "type": "select",
+                                    "label": "Input Type",
+                                    "options": [
+                                        {
+                                            "label": "Text",
+                                            "value": "text",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Number",
+                                            "value": "number",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "number",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Boolean",
+                                            "value": "boolean",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "boolean",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Date",
+                                            "value": "date",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "date",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "Any",
+                                            "value": "any",
+                                            "nested": [
+                                                {
+                                                    "name": "value",
+                                                    "type": "any",
+                                                    "label": "Parameter Value"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Input Parameter",
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "uinteger",
+                        "label": "Max Completion Tokens"
+                    },
+                    {
+                        "name": "messages",
+                        "type": "array",
+                        "label": "Messages",
+                        "required": true,
+                        "spec": {
+                            "label": "Message",
+                            "type": "collection",
+                            "spec": [
+                                {
+                                    "name": "role",
+                                    "type": "select",
+                                    "label": "Role",
+                                    "required": true,
+                                    "options": {
+                                        "store": [
+                                            {
+                                                "label": "System",
+                                                "value": "system",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "User",
+                                                "value": "user",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    },
+                                                    {
+                                                        "name": "imageInputType",
+                                                        "type": "select",
+                                                        "label": "Image Input Type",
+                                                        "mappable": false,
+                                                        "options": [
+                                                            {
+                                                                "value": "url",
+                                                                "label": "URL",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "imageUrl",
+                                                                        "label": "Image URL",
+                                                                        "type": "url",
+                                                                        "help": "Make sure to use a publically accessible URL.\nYou can test if your image is publically accessible by opening the link in an incognito tab."
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "value": "file",
+                                                                "label": "Image File",
+                                                                "nested": [
+                                                                    {
+                                                                        "name": "imageFile",
+                                                                        "label": "Image",
+                                                                        "type": "collection",
+                                                                        "spec": [
+                                                                            {
+                                                                                "name": "imageFilename",
+                                                                                "type": "filename",
+                                                                                "label": "Image Filename",
+                                                                                "semantic": "file:name",
+                                                                                "extension": [
+                                                                                    "jpg",
+                                                                                    "jpeg",
+                                                                                    "png",
+                                                                                    "webp",
+                                                                                    "gif"
+                                                                                ],
+                                                                                "help": "Accepted extensions: `.jpg`, `.jpeg`, `.png`, `.webp` and `.gif`."
+                                                                            },
+                                                                            {
+                                                                                "name": "imageData",
+                                                                                "type": "buffer",
+                                                                                "label": "Image Data",
+                                                                                "semantic": "file:data"
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "imageDetail",
+                                                        "type": "select",
+                                                        "label": "Image Detail",
+                                                        "advanced": true,
+                                                        "options": [
+                                                            {
+                                                                "value": "auto",
+                                                                "default": true,
+                                                                "label": "Auto"
+                                                            },
+                                                            {
+                                                                "value": "high",
+                                                                "label": "High"
+                                                            },
+                                                            {
+                                                                "value": "low",
+                                                                "label": "Low"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "label": "Assistant",
+                                                "value": "assistant",
+                                                "nested": [
+                                                    {
+                                                        "help": "Text content of the message on behalf of the selected __Role__.",
+                                                        "name": "content",
+                                                        "type": "text",
+                                                        "label": "Text Content"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "name": "value"
+                        }
+                    },
+                    {
+                        "name": "response_format",
+                        "type": "select",
+                        "label": "Response Format",
+                        "validate": {
+                            "enum": [
+                                "text",
+                                "json_object"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "result",
+                        "type": "any",
+                        "label": "Result"
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "object",
+                        "type": "text",
+                        "label": "Object"
+                    },
+                    {
+                        "name": "created",
+                        "type": "date",
+                        "label": "Created"
+                    },
+                    {
+                        "name": "model",
+                        "type": "text",
+                        "label": "Model"
+                    },
+                    {
+                        "name": "choices",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "text",
+                                    "type": "text",
+                                    "label": "Text"
+                                },
+                                {
+                                    "name": "index",
+                                    "type": "number",
+                                    "label": "Index"
+                                },
+                                {
+                                    "name": "logprobs",
+                                    "type": "text",
+                                    "label": "Log Probs"
+                                },
+                                {
+                                    "name": "finish_reason",
+                                    "type": "text",
+                                    "label": "Finish Reason"
+                                },
+                                {
+                                    "name": "message",
+                                    "spec": [
+                                        {
+                                            "name": "role",
+                                            "type": "text",
+                                            "label": "Role"
+                                        },
+                                        {
+                                            "name": "content",
+                                            "type": "text",
+                                            "label": "Content"
+                                        },
+                                        {
+                                            "name": "refusal",
+                                            "type": "text",
+                                            "label": "Refusal"
+                                        }
+                                    ],
+                                    "type": "collection",
+                                    "label": "Message"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array",
+                        "label": "Choices"
+                    },
+                    {
+                        "name": "usage",
+                        "spec": [
+                            {
+                                "name": "prompt_tokens",
+                                "type": "number",
+                                "label": "Prompt Tokens"
+                            },
+                            {
+                                "name": "completion_tokens",
+                                "type": "text",
+                                "label": "Completion Tokens"
+                            },
+                            {
+                                "name": "total_tokens",
+                                "type": "number",
+                                "label": "Total Tokens"
+                            },
+                            {
+                                "name": "prompt_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "cached_tokens",
+                                        "type": "uinteger",
+                                        "label": "Cached Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "image_tokens",
+                                        "type": "uinteger",
+                                        "label": "Image Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Prompt Tokens Details"
+                            },
+                            {
+                                "name": "completion_tokens_details",
+                                "spec": [
+                                    {
+                                        "name": "reasoning_tokens",
+                                        "type": "uinteger",
+                                        "label": "Reasoning Tokens"
+                                    },
+                                    {
+                                        "name": "text_tokens",
+                                        "type": "uinteger",
+                                        "label": "Text Tokens"
+                                    },
+                                    {
+                                        "name": "audio_tokens",
+                                        "type": "uinteger",
+                                        "label": "Audio Tokens"
+                                    }
+                                ],
+                                "type": "collection",
+                                "label": "Completion Tokens Details"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Usage"
+                    },
+                    {
+                        "name": "system_fingerprint",
+                        "type": "text",
+                        "label": "System Fingerprint"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 4,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "variables": [
+                    {
+                        "name": "rechtsform",
+                        "value": "{{if(contains(1.Rechtsperson; \"natürlich\"); \"natürliche Person\"; \"juristische Person\")}}"
+                    },
+                    {
+                        "name": "jur_person",
+                        "value": "{{if(contains(1.Rechtsperson; \"privat\"); \"privat-rechtlich\"; if(contains(1.Rechtsperson; \"öffentlich\"); \"öffentlich-rechtlich\"; emptystring))}}"
+                    }
+                ],
+                "scope": "roundtrip"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 645,
+                    "y": -3,
+                    "name": "Rechtsform"
+                },
+                "restore": {
+                    "expect": {
+                        "variables": {
+                            "items": [
+                                null,
+                                null
+                            ]
+                        },
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "type": "array",
+                        "label": "Variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "label": "Variable name",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Variable value",
+                                "type": "any"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "rechtsform",
+                        "label": "rechtsform",
+                        "type": "any"
+                    },
+                    {
+                        "name": "jur_person",
+                        "label": "jur_person",
+                        "type": "any"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "seatable:SearchRows",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2957577
+            },
+            "mapper": {
+                "table_name": "BAFA-Berater",
+                "limit": "2",
+                "insensitive": false,
+                "wildcard": false,
+                "column_name": "Vollständiger Name",
+                "search_term": "{{1.`Wer ist Ihr/e BeraterIN?`}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 941,
+                    "y": -1,
+                    "name": "Find consultant"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Brain2.de BAFA (BAFA)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "seatable2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "table_name": {
+                            "mode": "chose",
+                            "label": "BAFA-Berater"
+                        },
+                        "insensitive": {
+                            "mode": "chose"
+                        },
+                        "wildcard": {
+                            "mode": "chose"
+                        },
+                        "column_name": {
+                            "mode": "chose",
+                            "label": "Vollständiger Name"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:seatable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "table_name",
+                        "type": "select",
+                        "label": "Table Name",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "insensitive",
+                        "type": "boolean",
+                        "label": "Case Insensitive Search"
+                    },
+                    {
+                        "name": "wildcard",
+                        "type": "boolean",
+                        "label": "Activate wildcard search"
+                    },
+                    {
+                        "name": "column_name",
+                        "type": "select",
+                        "label": "Column name",
+                        "required": true
+                    },
+                    {
+                        "name": "search_term",
+                        "type": "text",
+                        "label": "Search term",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "seatable:ActionInsertAppendARow2",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2957577
+            },
+            "mapper": {
+                "row": {
+                    "ort": "{{1.Ort}}",
+                    "plz": "{{1.PLZ}}",
+                    "email": "{{1.`E-Mail-Adresse`}}",
+                    "anrede": "{{1.Anrede}}",
+                    "umsatz": "{{1.`Jahresumsatz in Euro`}}",
+                    "bafa_id": "{{5.`BAFA-ID`}}",
+                    "strasse": "{{1.`Adresse des Unternehmens`}}",
+                    "vorname": "{{1.`Vorname(n)`}}",
+                    "nachname": "{{1.`Nachname(n)`}}",
+                    "anzahl_ma": "{{1.`Anzahl der Beschäftigten (auf Vollzeitstellen aufrunden)`}}",
+                    "vorsteuer": "{{1.`Vorsteuerabzugsberechtigt?`}}",
+                    "wz_nummer": "{{3.choices[].message.content}}",
+                    "Eingang am": "{{now}}",
+                    "hausnummer": "{{1.`Hausnr.`}}",
+                    "rechtsform": "{{4.rechtsform}}",
+                    "tel_nummer": "{{1.`Tel: Nummer`}}",
+                    "tel_vorwahl": "{{1.`Tel: Vorwahl`}}",
+                    "freigegeben?": false,
+                    "rechtsperson": "{{4.jur_person}}",
+                    "berater_vorname": "{{5.Vorname}}",
+                    "best_subvention": true,
+                    "gruendungsdatum": "{{1.`Gründungsdatum`}}",
+                    "unternehmenstyp": "{{1.Unternehmenstyp}}",
+                    "berater_nachname": "{{5.Nachname}}",
+                    "best_unternehmen": true,
+                    "best_änderungen": true,
+                    "name_organisation": "{{1.`Name des Unternehmens`}}",
+                    "geschaeftsgegenstand": "{{1.`Geschäftsgegenstand`}}",
+                    "best_wahrheistgemäß": true,
+                    "antragstellende_person": "{{1.`Antragstellende Person`}}"
+                },
+                "table_name": "Anträge BAFA ab 2023"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1250,
+                    "y": -1,
+                    "name": "Save data in DB"
+                },
+                "restore": {
+                    "expect": {
+                        "row": {
+                            "nested": {
+                                "anrede": {
+                                    "mode": "edit"
+                                },
+                                "vorsteuer": {
+                                    "mode": "edit"
+                                },
+                                "rechtsform": {
+                                    "mode": "edit"
+                                },
+                                "freigegeben?": {
+                                    "mode": "chose"
+                                },
+                                "rechtsperson": {
+                                    "mode": "edit"
+                                },
+                                "best_subvention": {
+                                    "mode": "chose"
+                                },
+                                "unternehmenstyp": {
+                                    "mode": "edit"
+                                },
+                                "best_unternehmen": {
+                                    "mode": "chose"
+                                },
+                                "best_änderungen": {
+                                    "mode": "chose"
+                                },
+                                "best_wahrheistgemäß": {
+                                    "mode": "chose"
+                                },
+                                "antragstellende_person": {
+                                    "mode": "edit"
+                                }
+                            }
+                        },
+                        "table_name": {
+                            "mode": "chose",
+                            "label": "Anträge BAFA ab 2023"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "seatable2"
+                            },
+                            "label": "Brain2.de BAFA (BAFA)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:seatable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "table_name",
+                        "type": "select",
+                        "label": "Table Name",
+                        "required": true
+                    },
+                    {
+                        "name": "row",
+                        "spec": [
+                            {
+                                "name": "Nummer",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "Eingang am",
+                                "type": "date"
+                            },
+                            {
+                                "name": "freigegeben?",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "beantragt am",
+                                "type": "date"
+                            },
+                            {
+                                "name": "antragstellende_person",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "Freiberuflich tätige Person",
+                                        "Unternehmen"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "name_organisation",
+                                "type": "text"
+                            },
+                            {
+                                "name": "anrede",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "Herr"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "vorname",
+                                "type": "text"
+                            },
+                            {
+                                "name": "nachname",
+                                "type": "text"
+                            },
+                            {
+                                "name": "plz",
+                                "type": "text"
+                            },
+                            {
+                                "name": "ort",
+                                "type": "text"
+                            },
+                            {
+                                "name": "strasse",
+                                "type": "text"
+                            },
+                            {
+                                "name": "hausnummer",
+                                "type": "text"
+                            },
+                            {
+                                "name": "tel_vorwahl",
+                                "type": "text"
+                            },
+                            {
+                                "name": "tel_nummer",
+                                "type": "text"
+                            },
+                            {
+                                "name": "email",
+                                "type": "email"
+                            },
+                            {
+                                "name": "bafa_id",
+                                "type": "text"
+                            },
+                            {
+                                "name": "berater_vorname",
+                                "type": "text"
+                            },
+                            {
+                                "name": "berater_nachname",
+                                "type": "text"
+                            },
+                            {
+                                "name": "rechtsform",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "natürliche Person",
+                                        "juristische Person"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "rechtsperson",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "öffentlich-rechtlich",
+                                        "privat-rechtlich"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "vorsteuer",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "ja",
+                                        "nein",
+                                        "teilweise"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "gruendungsdatum",
+                                "type": "date"
+                            },
+                            {
+                                "name": "geschaeftsgegenstand",
+                                "type": "text"
+                            },
+                            {
+                                "name": "wz_nummer",
+                                "type": "text"
+                            },
+                            {
+                                "name": "unternehmenstyp",
+                                "type": "select",
+                                "validate": {
+                                    "enum": [
+                                        "eigenständiges Unternehmen",
+                                        "Partnerunternehmen"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "anzahl_ma",
+                                "type": "number"
+                            },
+                            {
+                                "name": "bilanzsumme",
+                                "type": "number"
+                            },
+                            {
+                                "name": "umsatz",
+                                "type": "number"
+                            },
+                            {
+                                "name": "best_unternehmen",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "best_subvention",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "best_änderungen",
+                                "type": "boolean"
+                            },
+                            {
+                                "name": "best_wahrheistgemäß",
+                                "type": "boolean"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Row Columns to Insert",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com"
+    }
+}
