@@ -338,10 +338,10 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
       return new Promise((resolve, reject) => {
         const select = document.querySelector('select#id');
         if (select) {
-          // Selecting BBG Bundesbetriebsberatungsstelle GmbH
-          select.value = "1047883";
+          // Selecting Förderungsgesellschaft des BDS-DGV mbH
+          select.value = "1047876";  // Correct ID for BDS
           select.dispatchEvent(new Event('change'));
-          resolve('Leitstelle set to BBG');
+          resolve('Leitstelle set to BDS');
         } else {
           reject('Leitstelle select not found');
         }
@@ -350,20 +350,37 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     [executeWithTimeout]
   );
 
-  const clickNoBafaId = useCallback(
+  const clickBafaId = useCallback(
     () =>
       executeWithTimeout(`
       return new Promise((resolve, reject) => {
-        const radio = document.querySelector('input#anerkannt-0');
+        const radio = document.querySelector('input#anerkannt-1');
         if (radio) {
           radio.click();
-          resolve('No BAFA-ID radio clicked');
+          resolve('BAFA-ID radio clicked');
         } else {
-          reject('No BAFA-ID radio not found');
+          reject('BAFA-ID radio not found');
         }
       });
     `),
     [executeWithTimeout]
+  );
+
+  const setBafaId = useCallback(
+    () =>
+      executeWithTimeout(`
+      return new Promise((resolve, reject) => {
+        const input = document.querySelector('input#bafaID');
+        if (input) {
+          input.value = "${submission.bafa_id}";
+          input.dispatchEvent(new Event('change'));
+          resolve('BAFA-ID set');
+        } else {
+          reject('BAFA-ID input not found');
+        }
+      });
+    `),
+    [executeWithTimeout, submission]
   );
 
   const setBeraterVorname = useCallback(
@@ -464,14 +481,23 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     () =>
       executeWithTimeout(`
       return new Promise((resolve, reject) => {
+        console.log('Attempting to set Gründungsdatum...');
         const input = document.querySelector('input[name="gruendungsdatum"]');
-        if (input) {
-          input.value = "${submission.gruendungsdatum}";
-          input.dispatchEvent(new Event('change'));
-          resolve('Gründungsdatum set');
-        } else {
+        
+        if (!input) {
+          console.error('Input element not found');
           reject('Gründungsdatum input not found');
+          return;
         }
+
+        // Convert the ISO string to YYYY-MM-DD format
+        const date = new Date("${submission.gruendungsdatum}");
+        const formattedDate = date.toISOString().split('T')[0];
+        
+        console.log('Setting date to:', formattedDate);
+        input.value = formattedDate;
+        input.dispatchEvent(new Event('change'));
+        resolve('Gründungsdatum set');
       });
     `),
     [executeWithTimeout, submission]
@@ -706,11 +732,15 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
         console.log("Clicking final Weiter button...");
         await clickWeiterButton();
 
-        console.log("Clicking No BAFA-ID radio...");
-        await clickNoBafaId();
 
-        console.log("Setting Beratungsunternehmen...");
-        await setBeratungsUnternehmen();
+        console.log("Clicking BAFA-ID radio...");
+        await clickBafaId();
+
+        console.log("Setting BAFA-ID...");
+        await setBafaId();
+
+        // console.log("Setting Beratungsunternehmen...");
+        // await setBeratungsUnternehmen();
 
         console.log("Setting Berater Vorname...");
         await setBeraterVorname();
@@ -739,7 +769,11 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
         await setVorsteuer();
 
         console.log("Setting Gründungsdatum...");
+        console.log("submission.gruendungsdatum", submission.gruendungsdatum);
+
+        await delay(1000);
         await setGruendungsdatum();
+        await delay(1000);
 
         console.log("Setting Geschäftsgegenstand...");
         await setGeschaeftsgegenstand();
@@ -803,10 +837,11 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     setTelefon,
     setEmail,
     setLeitstelle,
-    clickNoBafaId,
+    clickBafaId,
+    setBafaId,
+    setBeratungsUnternehmen,
     setBeraterVorname,
     setBeraterNachname,
-    setBeratungsUnternehmen,
     setRechtsform,
     setVorsteuer,
     setGruendungsdatum,
@@ -847,10 +882,11 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     setTelefon,
     setEmail,
     setLeitstelle,
-    clickNoBafaId,
+    clickBafaId,
+    setBafaId,
+    setBeratungsUnternehmen,
     setBeraterVorname,
     setBeraterNachname,
-    setBeratungsUnternehmen,
     setRechtsform,
     setVorsteuer,
     setGruendungsdatum,

@@ -34,6 +34,7 @@ label,status,message,timestamp
 ,success,"Vorname (Insert Text or Data) - building block id 1895280: Inserted ""Max"" using CSS or XPath selector ""input#vorname"".","Dec 06, 2024, 2:27:06 PM"
 ,success,"Nachname (Insert Text or Data) - building block id 1895281: Inserted ""Meister"" using CSS or XPath selector ""input#nachname"".","Dec 06, 2024, 2:27:07 PM"
 ,success,"Weiter (Click Web Element) - building block id 1895277: Clicked on web element using CSS or XPath selector ""button#next"".","Dec 06, 2024, 2:27:08 PM"
+
 ,success,"Rechtsform (Click Web Element) - building block id 1916869: Clicked on web element using CSS or XPath selector ""text=""juristische Person"""".","Dec 06, 2024, 2:27:09 PM"
 ,success,"Start Condition - building block id 1917293: Reference value used for the comparison is ""juristische Person"". The condition of ""EQUALS (=)"" from jur. Person (Set Condition) (id: 1917294) was fulfilled.","Dec 06, 2024, 2:27:10 PM"
 ,success,"Click Web Element - building block id 1917295: Clicked on web element using CSS or XPath selector ""text=""öffentlich-rechtlich"""".","Dec 06, 2024, 2:27:10 PM"
@@ -43,9 +44,12 @@ label,status,message,timestamp
 ,success,"Geschäftsgegenstand (Insert Text or Data) - building block id 1917152: Inserted ""Gastrounternehmen mit den besten Pommes der Welt"" using CSS or XPath selector ""input[id='gegenstand']"".","Dec 06, 2024, 2:27:14 PM"
 ,success,"WZ-Nummer (Insert Text or Data) - building block id 1917161: Inserted ""5010"" using CSS or XPath selector ""input[id='wirtschaftszweig']"".","Dec 06, 2024, 2:27:16 PM"
 ,success,"Weiter (Click Web Element) - building block id 1917163: Clicked on web element using CSS or XPath selector ""button[id='next']"".","Dec 06, 2024, 2:27:17 PM"
+
 ,success,"Bestätigung (Click Web Element) - building block id 1917169: Clicked on web element using CSS or XPath selector ""label[id='aggregatedBestaetigungenCheckboxLbl']"".","Dec 06, 2024, 2:27:18 PM"
 ,success,"Unternehmenstyp (Click Web Element) - building block id 1917177: Clicked on web element using CSS or XPath selector ""text=""eigenständiges Unternehmen"""".","Dec 06, 2024, 2:27:19 PM"
+
 ,success,"Anzahl MA (Insert Text or Data) - building block id 1917183: Inserted ""23"" using CSS or XPath selector ""input[id='beschaeftigte']"".","Dec 06, 2024, 2:27:20 PM"
+
 ,success,"Insert Text or Data - building block id 1917187: Inserted ""1234567"" using CSS or XPath selector ""input[id='bilanzsumme']"".","Dec 06, 2024, 2:27:21 PM"
 ,success,"Umsatz (Insert Text or Data) - building block id 1917189: Inserted ""1234567"" using CSS or XPath selector ""input[id='umsatz']"".","Dec 06, 2024, 2:27:22 PM"
 ,success,"Weiter (Click Web Element) - building block id 1917195: Clicked on web element using CSS or XPath selector ""button[id='next']"".","Dec 06, 2024, 2:27:23 PM"
