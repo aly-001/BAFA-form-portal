@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import Airtable from 'airtable';
+import { seaTableService } from '../services/seaTableService';
 
 const SubmissionContext = createContext();
 
@@ -8,23 +8,20 @@ export function SubmissionProvider({ children }) {
   const [currentSubmission, setCurrentSubmission] = useState(null);
 
   useEffect(() => {
-    const base = new Airtable({
-      apiKey: 'patAsxSbVPqEclD2r.6ea222477fc8d1b96b24c19362dabd7da4461dd80425223ac7a401524549a38e'
-    }).base('appoWynFcyhKrQjWb');
+    const fetchSubmissions = async () => {
+      try {
+        const data = await seaTableService.getTableData();
+        const submissionData = data.map(record => ({
+          id: record._id,
+          ...record
+        }));
+        setSubmissions(submissionData);
+      } catch (err) {
+        console.error('Error fetching submissions:', err);
+      }
+    };
 
-    base('tbl7fqxRhDepD6hRH').select({
-      maxRecords: 100,
-      view: 'Grid view'
-    }).eachPage((records, fetchNextPage) => {
-      const submissionData = records.map(record => ({
-        id: record.id,
-        ...record.fields
-      }));
-      setSubmissions(submissionData);
-      fetchNextPage();
-    }, (err) => {
-      if (err) console.error(err);
-    });
+    fetchSubmissions();
   }, []);
 
   return (

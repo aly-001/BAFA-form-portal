@@ -639,7 +639,7 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       console.log("Clicking DSGVO checkbox...");
-      await clickDsgvoCheckbox();
+      // await clickDsgvoCheckbox();
 
       console.log("Clicking Weiter button...");
       await clickWeiterButton();

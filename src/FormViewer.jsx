@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { useFormAutomation } from "./hooks/useFormAutomation";
 import Airtable from 'airtable';
 import { useSubmissions } from "./contexts/SubmissionContext";
+import axios from 'axios';
+import { seaTableService } from './services/seaTableService';
 
 function FormViewer() {
   const webviewRef = useRef(null);
@@ -9,6 +11,7 @@ function FormViewer() {
   const { submissions, currentSubmission, setCurrentSubmission } = useSubmissions();
   const { fillForm, debugDOM } = useFormAutomation(webviewRef, isWebviewReady, currentSubmission);
   const [showDetails, setShowDetails] = useState(true);
+  const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     if (webviewRef.current) {
@@ -26,6 +29,22 @@ function FormViewer() {
         });
       };
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tables = await seaTableService.getMetadata();
+        console.log('Tables:', tables);
+        // Once we know the table name, we can fetch the actual data
+        // const data = await seaTableService.getTableData();
+        // setTableData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleFillForm = () => {

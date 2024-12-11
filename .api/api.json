@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "seatable",
+      "source": "@seatable/v5.1#42gpw2dm0z0xep0",
+      "integrity": "sha512-pb6xblQ669PPezuMceZ2c3AHk3JUjkDWnyOKo+yNnL+iYDYb23V70BO8GgQ1onyFGfM5Ug7oRS3ehgMBt5D7rA==",
+      "installerVersion": "6.1.2"
+    }
+  ]
+}

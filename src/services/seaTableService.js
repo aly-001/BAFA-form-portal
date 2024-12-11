@@ -1,122 +1,81 @@
-import SEATABLE_CONFIG from '../config/seatable';
+import axios from 'axios';
+
+const BASE_URL = 'https://cloud.seatable.io';
+const AUTH_TOKEN = '9b3084c24fe8ae5b67fb7f465308df0a1b16d4d5';
 
 class SeaTableService {
   constructor() {
-    this.baseToken = null;
-    this.baseInfo = null;
-    this.tokenExpiryTime = null;
-  }
-
-  isTokenExpired() {
-    return !this.tokenExpiryTime || 
-           (this.tokenExpiryTime - Date.now()) < (60 * 60 * 1000);
+    this.accessToken = null;
+    this.dtableServer = null;
   }
 
   async initialize() {
-    if (this.isTokenExpired()) {
-      try {
-        // Include base name in the URL path
-        const url = `${SEATABLE_CONFIG.SERVER_URL}/api/v2.1/dtable/${SEATABLE_CONFIG.BASE_NAME}/app-access-token/`;
-        
-        console.log('Attempting to connect to:', url);
-        
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${SEATABLE_CONFIG.API_TOKEN.trim()}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-        });
-
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries(response.headers));
-        
-        const responseText = await response.text();
-        console.log('Raw response:', responseText);
-
-        if (!response.ok) {
-          throw new Error(`SeaTable API Error (${response.status}): ${responseText}`);
-        }
-
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (e) {
-          throw new Error(`Failed to parse response as JSON: ${responseText.substring(0, 200)}...`);
-        }
-
-        this.baseToken = data.access_token;
-        this.baseInfo = {
-          dtableUuid: data.dtable_uuid,
-          dtableServer: data.dtable_server,
-          workspaceId: SEATABLE_CONFIG.WORKSPACE_ID,
-        };
-        
-        this.tokenExpiryTime = Date.now() + (2.5 * 24 * 60 * 60 * 1000);
-        console.log('Successfully initialized SeaTable connection');
-      } catch (error) {
-        console.error('Failed to initialize SeaTable API:', error);
-        throw error;
-      }
-    }
-    return this.baseInfo;
-  }
-
-  async listRows(tableName, options = {}) {
-    if (!this.baseToken) {
-      await this.initialize();
-    }
-
     try {
-      const response = await fetch(`${this.baseInfo.dtableServer}/api/v1/dtables/${this.baseInfo.dtableUuid}/rows/?table_name=${tableName}`, {
+      const response = await axios({
+        method: 'GET',
+        url: `${BASE_URL}/api/v2.1/dtable/app-access-token/`,
         headers: {
-          'Authorization': `Token ${this.baseToken}`,
-          'Accept': 'application/json',
-        },
+          accept: 'application/json',
+          authorization: `Bearer ${AUTH_TOKEN}`
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
+      this.accessToken = response.data.access_token;
+      this.dtableServer = response.data.dtable_server;
     } catch (error) {
-      console.error('Failed to fetch rows:', error);
+      console.error('Failed to initialize SeaTable service:', error);
       throw error;
     }
   }
 
-  async addRow(tableName, rowData) {
-    if (!this.baseToken) {
+  async getTableData() {
+    if (!this.accessToken) {
       await this.initialize();
     }
 
     try {
-      const response = await fetch(`${this.baseInfo.dtableServer}/api/v1/dtables/${this.baseInfo.dtableUuid}/rows/`, {
-        method: 'POST',
+      const response = await axios({
+        method: 'GET',
+        url: `${BASE_URL}/api-gateway/api/v2/dtables/03fc6c69-fad8-4091-b911-01de9426383e/rows/`,
         headers: {
-          'Authorization': `Token ${this.baseToken}`,
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
         },
-        body: JSON.stringify({
-          table_name: tableName,
-          row: rowData,
-        }),
+        params: {
+          convert_keys: true,
+          table_name: 'Anträge BAFA ab 2023'
+        }
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
+      
+      return response.data.rows;
     } catch (error) {
-      console.error('Failed to add row:', error);
+      console.error('Failed to fetch table data:', error);
+      throw error;
+    }
+  }
+
+  async getMetadata() {
+    if (!this.accessToken) {
+      await this.initialize();
+    }
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${BASE_URL}/api-gateway/api/v2/dtables/03fc6c69-fad8-4091-b911-01de9426383e/metadata/`,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
+        }
+      });
+      
+      console.log('Available tables:', response.data.metadata.tables);
+      return response.data.metadata.tables;
+    } catch (error) {
+      console.error('Failed to fetch metadata:', error);
       throw error;
     }
   }
 }
 
-const seaTableService = new SeaTableService();
-export default seaTableService;
+export const seaTableService = new SeaTableService();
