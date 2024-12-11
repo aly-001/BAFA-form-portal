@@ -1,7 +1,11 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://cloud.seatable.io';
-const AUTH_TOKEN = '9b3084c24fe8ae5b67fb7f465308df0a1b16d4d5';
+const AUTH_TOKEN = import.meta.env.VITE_SEATABLE_API_TOKEN;
+
+if (!AUTH_TOKEN) {
+  throw new Error('VITE_SEATABLE_API_TOKEN is not defined in environment variables');
+}
 
 class SeaTableService {
   constructor() {
