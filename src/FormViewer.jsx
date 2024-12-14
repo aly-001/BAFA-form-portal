@@ -1,30 +1,54 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useFormAutomation } from "./hooks/useFormAutomation";
-import Airtable from 'airtable';
+import Airtable from "airtable";
 import { useSubmissions } from "./contexts/SubmissionContext";
-import axios from 'axios';
-import { seaTableService } from './services/seaTableService';
+import axios from "axios";
+import { seaTableService } from "./services/seaTableService";
+import { colors } from "./styles/colors";
 
 function FormViewer() {
   const webviewRef = useRef(null);
   const [isWebviewReady, setIsWebviewReady] = useState(false);
-  const { submissions, currentSubmission, setCurrentSubmission } = useSubmissions();
-  const { fillForm, debugDOM } = useFormAutomation(webviewRef, isWebviewReady, currentSubmission);
+  const { submissions, currentSubmission, setCurrentSubmission } =
+    useSubmissions();
+  const [delayMultiplier, setDelayMultiplier] = useState(1);
+  const [language, setLanguage] = useState('en');
+
+  const { fillForm, debugDOM } = useFormAutomation(
+    webviewRef,
+    isWebviewReady,
+    currentSubmission,
+    delayMultiplier
+  );
   const [showDetails, setShowDetails] = useState(true);
   const [tableData, setTableData] = useState([]);
+
+  const translations = {
+    en: {
+      selectSubmission: "Select a submission",
+      slowness: "Slowness",
+      fillForm: "Fill Form"
+    },
+    de: {
+      selectSubmission: "Einreichung auswählen",
+      slowness: "Geschwindigkeit",
+      fillForm: "Formular ausfüllen"
+    }
+  };
 
   useEffect(() => {
     if (webviewRef.current) {
       const webview = webviewRef.current;
-      
-      webview.addEventListener('did-finish-load', () => {
-        console.log('Webview finished loading');
+
+      webview.addEventListener("did-finish-load", () => {
+        console.log("Webview finished loading");
         setIsWebviewReady(true);
+        webview.setZoomLevel(-1.8);
       });
 
       // Cleanup listener on unmount
       return () => {
-        webview.removeEventListener('did-finish-load', () => {
+        webview.removeEventListener("did-finish-load", () => {
           setIsWebviewReady(true);
         });
       };
@@ -35,12 +59,12 @@ function FormViewer() {
     const fetchData = async () => {
       try {
         const tables = await seaTableService.getMetadata();
-        console.log('Tables:', tables);
+        console.log("Tables:", tables);
         // Once we know the table name, we can fetch the actual data
         // const data = await seaTableService.getTableData();
         // setTableData(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -58,7 +82,51 @@ function FormViewer() {
       height: "100%",
       display: "flex",
       flexDirection: "column",
-      overflow: "hidden",
+      overflow: "auto",
+      padding: "16px",
+      backgroundColor: colors.secondaryBackground,
+      borderRadius: "8px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    controlsRow: {
+      display: "flex",
+      gap: "16px",
+      marginBottom: "16px",
+      alignItems: "center",
+    },
+    select: {
+      flex: 1,
+      padding: "8px",
+      borderRadius: "6px",
+      border: `1px solid ${colors.tertiaryBackground}`,
+      backgroundColor: colors.secondaryBackground,
+      color: colors.primaryText,
+    },
+    delayControl: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      color: colors.primaryText,
+    },
+    slider: {
+      flex: 1,
+      height: "36px",
+      accentColor: colors.primary,
+      borderRadius: "6px",
+    },
+    button: {
+      padding: "8px 16px",
+      borderRadius: "6px",
+      border: "none",
+      backgroundColor: colors.fillFormButton,
+      color: colors.secondaryBackground,
+      cursor: "pointer",
+      marginBottom: "16px",
+      '&:disabled': {
+        backgroundColor: colors.tertiaryBackground,
+        cursor: "not-allowed",
+      },
     },
     webview: {
       flex: 1,
@@ -67,31 +135,65 @@ function FormViewer() {
       padding: 0,
       width: "100%",
       height: "100%",
+      borderRadius: "6px",
+      overflow: "hidden",
     },
     submissionDetails: {
       padding: "10px",
-      backgroundColor: "#f5f5f5",
+      backgroundColor: colors.primaryBackground,
       marginBottom: "10px",
+      borderRadius: "6px",
+      color: colors.primaryText,
     },
     field: {
       margin: "4px 0",
-    }
+    },
   };
 
   return (
     <div style={styles.container}>
-      <select 
-        onChange={(e) => setCurrentSubmission(submissions.find(s => s.id === e.target.value))}
-        value={currentSubmission?.id || ''}
-      >
-        <option value="">Select a submission</option>
-        {submissions.map(submission => (
-          <option key={submission.id} value={submission.id}>
-            {`${submission.vorname} ${submission.nachname}`}
-          </option>
-        ))}
-      </select>
-      
+      <div style={styles.controlsRow}>
+        <select
+          style={styles.select}
+          onChange={(e) =>
+            setCurrentSubmission(submissions.find((s) => s.id === e.target.value))
+          }
+          value={currentSubmission?.id || ""}
+        >
+          <option value="">{translations[language].selectSubmission}</option>
+          {submissions.map((submission) => (
+            <option key={submission.id} value={submission.id}>
+              {`${submission.vorname} ${submission.nachname}`}
+            </option>
+          ))}
+        </select>
+
+        <div style={styles.delayControl}>
+          <span>{translations[language].slowness}:</span>
+          <input
+            type="range"
+            style={styles.slider}
+            min="0.5"
+            max="3"
+            step="0.1"
+            value={delayMultiplier}
+            onChange={(e) => setDelayMultiplier(Number(e.target.value))}
+          />
+          <span>{delayMultiplier}x</span>
+        </div>
+
+        <button 
+          onClick={() => setLanguage(lang => lang === 'de' ? 'en' : 'de')}
+          style={{...styles.button, marginBottom: 0}}
+        >
+          {language === 'en' ? 'DE' : 'EN'}
+        </button>
+      </div>
+
+      <button style={styles.button} onClick={handleFillForm} disabled={!currentSubmission}>
+        {translations[language].fillForm}
+      </button>
+
       {currentSubmission && showDetails && (
         <div style={styles.submissionDetails}>
           {Object.entries(currentSubmission).map(([key, value]) => (
@@ -103,9 +205,6 @@ function FormViewer() {
         </div>
       )}
 
-      <button onClick={handleFillForm} disabled={!currentSubmission}>
-        Fill Form
-      </button>
       <webview
         ref={webviewRef}
         src="https://fms.bafa.de/BafaFrame/v2/ubf3"

@@ -3,7 +3,15 @@
 // NOTE: CHECK LEITSTELLE
 import { useCallback } from "react";
 
-export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
+export const useFormAutomation = (
+  webviewRef, 
+  isWebviewReady, 
+  submission,
+  delayMultiplier = 1 // default multiplier
+) => {
+  const baseDelay = 1000; // base delay of 1 second
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms * delayMultiplier));
+
   const waitForWebview = useCallback(() => {
     return new Promise((resolve) => {
       console.log("Waiting for webview... Current state:", isWebviewReady);
@@ -634,8 +642,9 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     [executeWithTimeout, submission]
   );
 
-  const clickAllConfirmationCheckboxes = useCallback(() => 
-    executeWithTimeout(`
+  const clickAllConfirmationCheckboxes = useCallback(
+    () =>
+      executeWithTimeout(`
       return new Promise((resolve, reject) => {
         const checkboxes = document.querySelectorAll('input#persoenlich1, input#persoenlich2, input#bwa');
         if (checkboxes.length === 3) {
@@ -653,8 +662,6 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     [executeWithTimeout]
   );
 
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   const fillForm = useCallback(async () => {
     try {
       console.log("Starting fillForm with submission:", submission);
@@ -662,19 +669,18 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
       console.log("Webview ready, clicking start button...");
       await clickStartButton();
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      console.log("Clicking DSGVO checkbox...");
-      // await clickDsgvoCheckbox();
-
+      await delay(baseDelay);
       console.log("Clicking Weiter button...");
       await clickWeiterButton();
+      await delay(baseDelay);
 
       console.log("Clicking Auth Choice None...");
       await clickAuthChoiceNone();
 
+      await delay(baseDelay);
       console.log("clicking weiter button");
       await clickWeiterButton();
+      await delay(baseDelay);
 
       if (submission) {
         console.log("Setting Antragsberechtigt...");
@@ -715,23 +721,24 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
 
         console.log("Clicking Weiter button...");
         await clickWeiterButton();
+        await delay(baseDelay);
 
         console.log("Waiting for page transition...");
-        await delay(1000); // 1 second delay
+        await delay(baseDelay); // 1 second delay
 
         console.log("Clicking final Weiter button...");
         await clickWeiterButton();
+        await delay(baseDelay);
 
-        await delay(1000); // 1 second delay
+        await delay(baseDelay);
 
         console.log("Setting Leitstelle...");
         await setLeitstelle();
 
-        await delay(1000); // 1 second delay
-
+        await delay(baseDelay);
         console.log("Clicking final Weiter button...");
         await clickWeiterButton();
-
+        await delay(baseDelay);
 
         console.log("Clicking BAFA-ID radio...");
         await clickBafaId();
@@ -749,13 +756,14 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
         await setBeraterNachname();
 
         //delay
-        await delay(1000);
+        await delay(baseDelay);
 
         console.log("Clicking Weiter button...");
         await clickWeiterButton();
+        await delay(baseDelay);
 
         //delay
-        await delay(1000);
+        await delay(baseDelay);
 
         console.log("Setting Rechtsform...");
         await setRechtsform();
@@ -771,9 +779,9 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
         console.log("Setting Gründungsdatum...");
         console.log("submission.gruendungsdatum", submission.gruendungsdatum);
 
-        await delay(1000);
+        await delay(baseDelay);
         await setGruendungsdatum();
-        await delay(1000);
+        await delay(baseDelay);
 
         console.log("Setting Geschäftsgegenstand...");
         await setGeschaeftsgegenstand();
@@ -782,19 +790,20 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
         await setWirtschaftszweig();
 
         //delay
-        await delay(1000);
+        await delay(baseDelay);
 
         console.log("Clicking Weiter button...");
         await clickWeiterButton();
+        await delay(baseDelay);
 
         //delay
-        await delay(2000);
+        await delay(baseDelay);
 
         console.log("Clicking confirmation checkbox...");
         await clickConfirmation();
 
         //delay
-        await delay(1000);
+        await delay(baseDelay);
 
         console.log("Setting Unternehmenstyp...");
         await setUnternehmenstyp();
@@ -807,6 +816,7 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
 
         console.log("next");
         await clickWeiterButton();
+        await delay(baseDelay);
 
         console.log("Clicking all confirmation checkboxes...");
         await clickAllConfirmationCheckboxes();
@@ -852,6 +862,7 @@ export const useFormAutomation = (webviewRef, isWebviewReady, submission) => {
     setBeschaeftigte,
     setUmsatz,
     clickConfirmation,
+    delayMultiplier
   ]);
 
   const debugDOM = useCallback(

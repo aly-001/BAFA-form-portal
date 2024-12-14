@@ -10,7 +10,8 @@ if (!AUTH_TOKEN) {
 class SeaTableService {
   constructor() {
     this.accessToken = null;
-    this.dtableServer = null;
+    this.dtableServer = 'https://cloud.seatable.io/dtable-server/';
+    this.dtableUuid = 'f761eebb-877f-4d76-bff4-7353ddcf5dc7';
   }
 
   async initialize() {
@@ -40,7 +41,7 @@ class SeaTableService {
     try {
       const response = await axios({
         method: 'GET',
-        url: `${BASE_URL}/api-gateway/api/v2/dtables/03fc6c69-fad8-4091-b911-01de9426383e/rows/`,
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/rows/`,
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${this.accessToken}`,
@@ -66,7 +67,7 @@ class SeaTableService {
     try {
       const response = await axios({
         method: 'GET',
-        url: `${BASE_URL}/api-gateway/api/v2/dtables/03fc6c69-fad8-4091-b911-01de9426383e/metadata/`,
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/metadata/`,
         headers: {
           'Accept': 'application/json',
           'Authorization': `Bearer ${this.accessToken}`,
