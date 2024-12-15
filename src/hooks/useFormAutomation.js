@@ -2,15 +2,17 @@
 
 // NOTE: CHECK LEITSTELLE
 import { useCallback } from "react";
+import { loggingService } from "../services/loggingService";
 
 export const useFormAutomation = (
-  webviewRef, 
-  isWebviewReady, 
+  webviewRef,
+  isWebviewReady,
   submission,
   delayMultiplier = 1 // default multiplier
 ) => {
   const baseDelay = 1000; // base delay of 1 second
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms * delayMultiplier));
+  const delay = (ms) =>
+    new Promise((resolve) => setTimeout(resolve, ms * delayMultiplier));
 
   const waitForWebview = useCallback(() => {
     return new Promise((resolve) => {
@@ -662,208 +664,346 @@ export const useFormAutomation = (
     [executeWithTimeout]
   );
 
-  const fillForm = useCallback(async () => {
-    try {
-      console.log("Starting fillForm with submission:", submission);
-      await waitForWebview();
-      console.log("Webview ready, clicking start button...");
-      await clickStartButton();
+  const clickSubmitButton = useCallback(
+    () =>
+      executeWithTimeout(`
+      return new Promise((resolve, reject) => {
+        const submitButton = document.querySelector('button#send[name="next"]');
+        if (submitButton) {
+          submitButton.click();
+          resolve('Submit button clicked');
+        } else {
+          reject('Submit button not found');
+        }
+      });
+    `),
+    [executeWithTimeout]
+  );
 
-      await delay(baseDelay);
-      console.log("Clicking Weiter button...");
-      await clickWeiterButton();
-      await delay(baseDelay);
+  const downloadPDF = useCallback(
+    () =>
+      executeWithTimeout(`
+      return new Promise((resolve, reject) => {
+        const pdfLink = document.querySelector('a#submitFormLink');
+        if (pdfLink) {
+          // Create a click event that allows default behavior
+          const event = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+          });
+          
+          // Dispatch the event and let the default handler work
+          const success = pdfLink.dispatchEvent(event);
+          
+          if (success) {
+            resolve('PDF download initiated');
+          } else {
+            reject('PDF download failed');
+          }
+        } else {
+          reject('PDF download link not found');
+        }
+      });
+    `),
+    [executeWithTimeout]
+  );
 
-      console.log("Clicking Auth Choice None...");
-      await clickAuthChoiceNone();
+  const fillForm = useCallback(
+    async (shouldSubmit = false) => {
+      const sessionId = crypto.randomUUID();
+      try {
+        console.log("Starting fillForm with submission:", submission);
+        await loggingService.logAction(sessionId, "FORM_FILL_START", "INFO", {
+          submissionDetails: {
+            antragstellende_person: submission.antragstellende_person,
+            name_organisation: submission.name_organisation,
+            email: submission.email,
+            shouldSubmit: shouldSubmit,
+            // Add any other relevant submission details you want to track
+          }
+        });
 
-      await delay(baseDelay);
-      console.log("clicking weiter button");
-      await clickWeiterButton();
-      await delay(baseDelay);
-
-      if (submission) {
-        console.log("Setting Antragsberechtigt...");
-        await setAntragsberechtigt();
-
-        console.log("Setting Organisation...");
-        await setOrganisation();
-
-        console.log("Setting Anrede...");
-        await setAnrede();
-
-        console.log("Setting Vorname...");
-        await setVorname();
-
-        console.log("Setting Nachname...");
-        await setNachname();
-
-        console.log("Setting Land...");
-        await setLand();
-
-        console.log("Setting PLZ...");
-        await setPlz();
-
-        console.log("Setting Ort...");
-        await setOrt();
-
-        console.log("Setting Strasse...");
-        await setStrasse();
-
-        console.log("Setting Hausnummer...");
-        await setHausnummer();
-
-        console.log("Setting Telefon...");
-        await setTelefon();
-
-        console.log("Setting Email...");
-        await setEmail();
-
-        console.log("Clicking Weiter button...");
-        await clickWeiterButton();
-        await delay(baseDelay);
-
-        console.log("Waiting for page transition...");
-        await delay(baseDelay); // 1 second delay
-
-        console.log("Clicking final Weiter button...");
-        await clickWeiterButton();
-        await delay(baseDelay);
-
-        await delay(baseDelay);
-
-        console.log("Setting Leitstelle...");
-        await setLeitstelle();
-
-        await delay(baseDelay);
-        console.log("Clicking final Weiter button...");
-        await clickWeiterButton();
-        await delay(baseDelay);
-
-        console.log("Clicking BAFA-ID radio...");
-        await clickBafaId();
-
-        console.log("Setting BAFA-ID...");
-        await setBafaId();
-
-        // console.log("Setting Beratungsunternehmen...");
-        // await setBeratungsUnternehmen();
-
-        console.log("Setting Berater Vorname...");
-        await setBeraterVorname();
-
-        console.log("Setting Berater Nachname...");
-        await setBeraterNachname();
-
-        //delay
-        await delay(baseDelay);
-
-        console.log("Clicking Weiter button...");
-        await clickWeiterButton();
-        await delay(baseDelay);
-
-        //delay
-        await delay(baseDelay);
-
-        console.log("Setting Rechtsform...");
-        await setRechtsform();
-
-        if (submission.rechtsform === "juristische Person") {
-          console.log("Setting Rechtsperson type...");
-          await setRechtsperson();
+        await waitForWebview();
+        console.log("Webview ready, clicking start button...");
+        try {
+          await clickStartButton();
+        } catch (error) {
+          await loggingService.logAction(
+            sessionId,
+            "START_BUTTON_ERROR",
+            "ERROR",
+            error
+          );
+          throw error;
         }
 
-        console.log("Setting Vorsteuer...");
-        await setVorsteuer();
-
-        console.log("Setting Gründungsdatum...");
-        console.log("submission.gruendungsdatum", submission.gruendungsdatum);
-
         await delay(baseDelay);
-        await setGruendungsdatum();
-        await delay(baseDelay);
-
-        console.log("Setting Geschäftsgegenstand...");
-        await setGeschaeftsgegenstand();
-
-        console.log("Setting Wirtschaftszweig...");
-        await setWirtschaftszweig();
-
-        //delay
-        await delay(baseDelay);
-
         console.log("Clicking Weiter button...");
+        try {
+          await clickWeiterButton();
+        } catch (error) {
+          await loggingService.logAction(
+            sessionId,
+            "WEITER_BUTTON_ERROR",
+            "ERROR",
+            error
+          );
+          throw error;
+        }
+
+        await delay(baseDelay);
+        console.log("Clicking Auth Choice None...");
+        await clickAuthChoiceNone();
+
+        await delay(baseDelay);
+        console.log("clicking weiter button");
         await clickWeiterButton();
         await delay(baseDelay);
 
-        //delay
-        await delay(baseDelay);
+        if (submission) {
+          console.log("Setting Antragsberechtigt...");
+          await setAntragsberechtigt();
 
-        console.log("Clicking confirmation checkbox...");
-        await clickConfirmation();
+          console.log("Setting Organisation...");
+          await setOrganisation();
 
-        //delay
-        await delay(baseDelay);
+          console.log("Setting Anrede...");
+          await setAnrede();
 
-        console.log("Setting Unternehmenstyp...");
-        await setUnternehmenstyp();
+          console.log("Setting Vorname...");
+          await setVorname();
 
-        console.log("Setting Beschäftigte...");
-        await setBeschaeftigte();
+          console.log("Setting Nachname...");
+          await setNachname();
 
-        console.log("Setting Umsatz...");
-        await setUmsatz();
+          console.log("Setting Land...");
+          await setLand();
 
-        console.log("next");
-        await clickWeiterButton();
-        await delay(baseDelay);
+          console.log("Setting PLZ...");
+          await setPlz();
 
-        console.log("Clicking all confirmation checkboxes...");
-        await clickAllConfirmationCheckboxes();
+          console.log("Setting Ort...");
+          await setOrt();
 
-        // console.log("Clicking Weiter button...");
-        // await clickWeiterButton();
+          console.log("Setting Strasse...");
+          await setStrasse();
+
+          console.log("Setting Hausnummer...");
+          await setHausnummer();
+
+          console.log("Setting Telefon...");
+          await setTelefon();
+
+          console.log("Setting Email...");
+          await setEmail();
+
+          console.log("Clicking Weiter button...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          console.log("Waiting for page transition...");
+          await delay(baseDelay); // 1 second delay
+
+          console.log("Clicking final Weiter button...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          await delay(baseDelay);
+
+          console.log("Setting Leitstelle...");
+          await setLeitstelle();
+
+          await delay(baseDelay);
+          console.log("Clicking final Weiter button...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          console.log("Clicking BAFA-ID radio...");
+          await clickBafaId();
+
+          console.log("Setting BAFA-ID...");
+          await setBafaId();
+
+          // console.log("Setting Beratungsunternehmen...");
+          // await setBeratungsUnternehmen();
+
+          console.log("Setting Berater Vorname...");
+          await setBeraterVorname();
+
+          console.log("Setting Berater Nachname...");
+          await setBeraterNachname();
+
+          //delay
+          await delay(baseDelay);
+
+          console.log("Clicking Weiter button...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          //delay
+          await delay(baseDelay);
+
+          console.log("Setting Rechtsform...");
+          await setRechtsform();
+
+          if (submission.rechtsform === "juristische Person") {
+            console.log("Setting Rechtsperson type...");
+            await setRechtsperson();
+          }
+
+          console.log("Setting Vorsteuer...");
+          await setVorsteuer();
+
+          console.log("Setting Gründungsdatum...");
+          console.log("submission.gruendungsdatum", submission.gruendungsdatum);
+
+          await delay(baseDelay);
+          await setGruendungsdatum();
+          await delay(baseDelay);
+
+          console.log("Setting Geschäftsgegenstand...");
+          await setGeschaeftsgegenstand();
+
+          console.log("Setting Wirtschaftszweig...");
+          await setWirtschaftszweig();
+
+          //delay
+          await delay(baseDelay);
+
+          console.log("Clicking Weiter button...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          //delay
+          await delay(baseDelay);
+
+          console.log("Clicking confirmation checkbox...");
+          await clickConfirmation();
+
+          //delay
+          await delay(baseDelay);
+
+          console.log("Setting Unternehmenstyp...");
+          await setUnternehmenstyp();
+
+          console.log("Setting Beschäftigte...");
+          await setBeschaeftigte();
+
+          console.log("Setting Umsatz...");
+          await setUmsatz();
+
+          console.log("next");
+          await clickWeiterButton();
+          await delay(baseDelay);
+
+          console.log("Clicking all confirmation checkboxes...");
+          await clickAllConfirmationCheckboxes();
+
+          console.log("Submitting form...");
+          await clickWeiterButton();
+          await delay(baseDelay);
+          await clickWeiterButton();
+
+          if (shouldSubmit) {
+            console.log("Submitting form and downloading PDF...");
+            await loggingService.logAction(
+              sessionId,
+              "FORM_SUBMIT_START",
+              "INFO"
+            );
+
+            try {
+              await delay(baseDelay * 2);
+              await clickSubmitButton();
+              await delay(baseDelay * 3);
+
+              await loggingService.logAction(
+                sessionId,
+                "PDF_DOWNLOAD_START",
+                "INFO"
+              );
+              await downloadPDF();
+
+              await loggingService.logAction(
+                sessionId,
+                "FORM_SUBMIT_COMPLETE",
+                "SUCCESS"
+              );
+              console.log("PDF download initiated");
+            } catch (error) {
+              await loggingService.logAction(
+                sessionId,
+                "FORM_SUBMIT_ERROR",
+                "ERROR",
+                error
+              );
+              throw error;
+            }
+          }
+        }
+
+        await loggingService.logAction(
+          sessionId,
+          "FORM_FILL_COMPLETE",
+          "SUCCESS"
+        );
+      } catch (error) {
+        console.error("Error filling form:", error);
+        await loggingService.logAction(
+          sessionId,
+          shouldSubmit ? "FORM_SUBMIT_ERROR" : "FORM_FILL_ERROR",
+          "ERROR",
+          {
+            message: error.message,
+            stack: error.stack,
+            step: error.step || "unknown",
+            details: error.details || {},
+          }
+        );
+        throw error; // Re-throw to allow parent components to handle the error
       }
-    } catch (error) {
-      console.error("Error filling form:", error);
-    }
-  }, [
-    waitForWebview,
-    clickStartButton,
-    clickDsgvoCheckbox,
-    clickWeiterButton,
-    clickAuthChoiceNone,
-    submission,
-    setAntragsberechtigt,
-    setOrganisation,
-    setAnrede,
-    setVorname,
-    setNachname,
-    setLand,
-    setPlz,
-    setOrt,
-    setStrasse,
-    setHausnummer,
-    setTelefon,
-    setEmail,
-    setLeitstelle,
-    clickBafaId,
-    setBafaId,
-    setBeratungsUnternehmen,
-    setBeraterVorname,
-    setBeraterNachname,
-    setRechtsform,
-    setVorsteuer,
-    setGruendungsdatum,
-    setGeschaeftsgegenstand,
-    setWirtschaftszweig,
-    setRechtsperson,
-    setUnternehmenstyp,
-    setBeschaeftigte,
-    setUmsatz,
-    clickConfirmation,
-    delayMultiplier
-  ]);
+    },
+    [
+      waitForWebview,
+      clickStartButton,
+      clickDsgvoCheckbox,
+      clickWeiterButton,
+      clickAuthChoiceNone,
+      submission,
+      setAntragsberechtigt,
+      setOrganisation,
+      setAnrede,
+      setVorname,
+      setNachname,
+      setLand,
+      setPlz,
+      setOrt,
+      setStrasse,
+      setHausnummer,
+      setTelefon,
+      setEmail,
+      setLeitstelle,
+      clickBafaId,
+      setBafaId,
+      setBeratungsUnternehmen,
+      setBeraterVorname,
+      setBeraterNachname,
+      setRechtsform,
+      setVorsteuer,
+      setGruendungsdatum,
+      setGeschaeftsgegenstand,
+      setWirtschaftszweig,
+      setRechtsperson,
+      setUnternehmenstyp,
+      setBeschaeftigte,
+      setUmsatz,
+      clickConfirmation,
+      delayMultiplier,
+      clickSubmitButton,
+      downloadPDF,
+    ]
+  );
 
   const debugDOM = useCallback(
     () =>

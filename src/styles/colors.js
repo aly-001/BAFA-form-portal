@@ -19,4 +19,5 @@ export const colors = {
   shadePrimary: "#ECECF2",
 
   fillFormButton: "#1EA9E1",
+  danger: "#dc3545",
 };
