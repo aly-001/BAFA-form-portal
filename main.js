@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, session } = require('electron')
 const path = require('path')
 // Force production mode when packaged
 const isDev = !app.isPackaged
@@ -12,6 +12,33 @@ function createWindow() {
             contextIsolation: false,
             webviewTag: true
         }
+    })
+
+    // Add download handler
+    session.defaultSession.on('will-download', (event, item, webContents) => {
+        // Get user's downloads directory
+        const downloadsPath = app.getPath('downloads')
+        
+        // Set the save path, forcing Electron to automatically download to the downloads directory
+        item.setSavePath(path.join(downloadsPath, item.getFilename()))
+
+        item.on('updated', (event, state) => {
+            if (state === 'interrupted') {
+                console.log('Download interrupted')
+            } else if (state === 'progressing') {
+                if (item.isPaused()) {
+                    console.log('Download paused')
+                }
+            }
+        })
+
+        item.on('done', (event, state) => {
+            if (state === 'completed') {
+                console.log('Download completed')
+            } else {
+                console.log(`Download failed: ${state}`)
+            }
+        })
     })
 
     if (isDev) {

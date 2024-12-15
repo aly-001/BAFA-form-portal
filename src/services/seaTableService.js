@@ -3,6 +3,16 @@ import axios from 'axios';
 const BASE_URL = 'https://cloud.seatable.io';
 const AUTH_TOKEN = import.meta.env.VITE_SEATABLE_API_TOKEN;
 
+const log = (message, data) => {
+  if (process.env.NODE_ENV === 'development') {
+    if (data) {
+      console.log(message, data);
+    } else {
+      console.log(message);
+    }
+  }
+};
+
 if (!AUTH_TOKEN) {
   throw new Error('VITE_SEATABLE_API_TOKEN is not defined in environment variables');
 }
@@ -74,7 +84,7 @@ class SeaTableService {
         }
       });
       
-      console.log('Available tables:', response.data.metadata.tables);
+      // log('Available tables:', response.data.metadata.tables);
       return response.data.metadata.tables;
     } catch (error) {
       console.error('Failed to fetch metadata:', error);
