@@ -1,0 +1,15 @@
+Version: 22.4.1
+Target: Windows
+I finally got my EV Code Signing dongle and set everything up in package.json so that electron-builder would sign my app. I have all 3 fields (certificateSubjectName, certificatePassword, and certificateSha1) filled out and things seem to work, but in the build process, I'm literally prompted by the SafeNet app to enter my password like 30 times.
+
+Has anyone else run into this? It seems to be prompting a password for every executable I have in the directory, including those in node_modules.
+
+After repeatedly entering in my password, it seems to have worked, but there's no way I'm doing this correctly. Thanks!
+
+@emptycrown
+Author
+emptycrown commented on Mar 17, 2020
+Duplicate of #4604 (sort of)
+
+After enabling Single Login, I only had to manually enter the password 4 times. Not amazing but manageable.
+
