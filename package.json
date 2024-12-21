@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron:dev": "concurrently \"npm run dev\" \"wait-on tcp:5173 && electron .\"",
-    "electron:build": "vite build && electron-forge make"
+    "electron:build": "npm run build && electron-builder build --mac"
   },
   "dependencies": {
     "@api/seatable": "file:.api/apis/seatable",
@@ -28,6 +28,7 @@
     "@types/react-dom": "^18.3.2",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.0",
+    "dotenv-cli": "^7.4.4",
     "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
     "vite": "^5.4.11",
@@ -38,12 +39,12 @@
     "productName": "Bafa Form Portal - Test",
     "mac": {
       "category": "public.app-category.utilities",
-      "target": "dmg",
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
-      "identity": null
+      "identity": "E68153091B7352F1AA0ED2F602753B20A0819ED2",
+      "notarize": false
     },
     "files": [
       "dist/**/*",
@@ -53,37 +54,6 @@
     "directories": {
       "buildResources": "assets",
       "output": "release"
-    },
-    "asar": true
-  },
-  "config": {
-  "forge": {
-    "packagerConfig": {
-      "name": "Bafa Form Portal - Test",
-      "executableName": "Bafa Form Portal",
-      "icon": "./assets/icon",
-      "osxSign": {
-        "identity": "Developer ID Application: Alexander MacKenzie (AB8B9V3YYU)",
-        "hardened-runtime": true,
-        "entitlements": "build/entitlements.mac.plist",
-        "entitlements-inherit": "build/entitlements.mac.plist",
-        "signature-flags": "library"
-      },
-      "osxNotarize": {
-        "appleId": "alexandermackenzie3775@gmail.com",
-        "appleIdPassword": "gzdt-hdup-kwod-caia",
-        "teamId": "AB8B9V3YYU"
-      }
-    },
-    "makers": [
-      {
-        "name": "@electron-forge/maker-dmg",
-        "config": {
-          "format": "ULFO"
-        }
-      }
-    ]
+    }
   }
-}
-
 }
