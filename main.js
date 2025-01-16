@@ -3,6 +3,12 @@ const path = require('path')
 // Force production mode when packaged
 const isDev = !app.isPackaged
 
+const log = (...args) => {
+    if (!app.isPackaged) {  // Only log in development
+        console.log(...args);
+    }
+};
+
 function createWindow() {
     const win = new BrowserWindow({
         width: 1200,
@@ -14,32 +20,64 @@ function createWindow() {
         }
     })
 
-    // Add download handler
+    // Enhanced download handler with popup management
     session.defaultSession.on('will-download', (event, item, webContents) => {
-        // Get user's downloads directory
-        const downloadsPath = app.getPath('downloads')
+        log('Download initiated:', item.getURL());
         
-        // Set the save path, forcing Electron to automatically download to the downloads directory
-        item.setSavePath(path.join(downloadsPath, item.getFilename()))
+        // Get reference to the popup window that initiated the download
+        const popup = BrowserWindow.fromWebContents(webContents);
+        
+        // Get user's downloads directory
+        const downloadsPath = app.getPath('downloads');
+        const filename = item.getFilename();
+        const savePath = path.join(downloadsPath, filename);
+        
+        log('Saving to:', savePath);
+        item.setSavePath(savePath);
 
         item.on('updated', (event, state) => {
             if (state === 'interrupted') {
-                console.log('Download interrupted')
+                log('Download interrupted:', filename);
             } else if (state === 'progressing') {
                 if (item.isPaused()) {
-                    console.log('Download paused')
+                    log('Download paused:', filename);
+                } else {
+                    const percent = item.getReceivedBytes() / item.getTotalBytes() * 100;
+                    log(`Download progress: ${Math.round(percent)}%`);
                 }
             }
-        })
+        });
 
         item.on('done', (event, state) => {
             if (state === 'completed') {
-                console.log('Download completed')
+                log('Download completed:', filename);
+                // Notify the renderer process
+                webContents.send('download-completed', {
+                    filename,
+                    path: savePath
+                });
             } else {
-                console.log(`Download failed: ${state}`)
+                log(`Download failed: ${state}`, filename);
             }
-        })
-    })
+
+            // Close the popup window if it exists and isn't destroyed
+            if (popup && !popup.isDestroyed()) {
+                log('Closing popup window...');
+                popup.close();
+            }
+        });
+    });
+
+    // Add request interceptor for PDFs
+    session.defaultSession.webRequest.onBeforeRequest(
+        { urls: ['*://*/*'] },
+        (details, callback) => {
+            if (details.url.endsWith('.pdf') || details.url.includes('?__blob=publicationFile')) {
+                log('Intercepted PDF request:', details.url);
+            }
+            callback({});
+        }
+    );
 
     if (isDev) {
         win.loadURL('http://localhost:5173')

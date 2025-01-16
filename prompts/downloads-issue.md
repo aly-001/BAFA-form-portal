@@ -1,3 +1,29 @@
+I'm working on a project that uses Electron to create a desktop applicaition. 
+
+I'm trying to download a file from a webview.
+
+Current setup:
+
+FormViewer (contains the webview)
+
+main.js (contains the download handler)
+
+Here's the code for the download in the HTML.
+
+<li class="download"><a href="/SharedDocs/Downloads/DE/Aussenwirtschaft/AGG/afk_genehmigungsarten_agg_agg33_2024_04.pdf?__blob=publicationFile&amp;v=3" title="Öffnet im neuen Fenster" class="downloadLink" target="_blank"><span class="aural">Artikel "Allgemeine Genehmigung <abbr title="Nummer">Nr.</abbr> 33 – Ausfuhr und Verbringung von sonstigen Rüstungsgütern"</span> Herunterladen&nbsp;<span class="filedata">(PDF, 786KB, Datei ist nicht barrierefrei)</span></a></li>
+
+
+If I copy link address for the download link it's https://www.bafa.de/SharedDocs/Downloads/DE/Aussenwirtschaft/AGG/afk_genehmigungsarten_agg_agg33_2024_04.pdf?__blob=publicationFile&v=3
+
+
+Note that when I download the file, something quickly pops up (in another tab) and then goes away.
+
+I've tried a lot of things to get the download to work through the webview, but it's not working.
+
+Let me know if you need me to provide any more information.
+
+Here are the files I mentioned.
+
 import React, { useRef, useState, useEffect } from "react";
 import { useFormAutomation } from "./hooks/useFormAutomation";
 import Airtable from "airtable";
@@ -161,20 +187,11 @@ function FormViewer() {
         webview.setZoomLevel(-1.8);
       });
 
-      // Add new-window event listener
-      webview.addEventListener('new-window', (event) => {
-        log('New window requested:', event.url);
-        // Prevent default behavior
-        event.preventDefault();
-        // You can handle the URL here if needed
-      });
-
-      // Cleanup listeners on unmount
+      // Cleanup listener on unmount
       return () => {
         webview.removeEventListener("did-finish-load", () => {
           setIsWebviewReady(true);
         });
-        webview.removeEventListener('new-window', () => {});
       };
     }
   }, []);
@@ -311,7 +328,6 @@ function FormViewer() {
         ref={webviewRef}
         src="https://fms.bafa.de/BafaFrame/v2/ubf3"
         style={styles.webview}
-        allowpopups="true"
         webpreferences="contextIsolation=true, nodeIntegration=false"
       />
     </div>
@@ -319,3 +335,84 @@ function FormViewer() {
 }
 
 export default FormViewer;
+
+
+const { app, BrowserWindow, session } = require('electron')
+const path = require('path')
+// Force production mode when packaged
+const isDev = !app.isPackaged
+
+function createWindow() {
+    const win = new BrowserWindow({
+        width: 1200,
+        height: 1400,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            webviewTag: true
+        }
+    })
+
+    // Add download handler
+    session.defaultSession.on('will-download', (event, item, webContents) => {
+        // Get user's downloads directory
+        const downloadsPath = app.getPath('downloads')
+        
+        // Set the save path, forcing Electron to automatically download to the downloads directory
+        item.setSavePath(path.join(downloadsPath, item.getFilename()))
+
+        item.on('updated', (event, state) => {
+            if (state === 'interrupted') {
+                console.log('Download interrupted')
+            } else if (state === 'progressing') {
+                if (item.isPaused()) {
+                    console.log('Download paused')
+                }
+            }
+        })
+
+        item.on('done', (event, state) => {
+            if (state === 'completed') {
+                console.log('Download completed')
+            } else {
+                console.log(`Download failed: ${state}`)
+            }
+        })
+    })
+
+    if (isDev) {
+        win.loadURL('http://localhost:5173')
+        win.webContents.openDevTools()
+    } else {
+        const indexPath = path.join(__dirname, 'dist', 'index.html')
+        console.log('Loading from:', indexPath)
+        console.log('Current directory:', __dirname)
+        console.log('File exists:', require('fs').existsSync(indexPath))
+        
+        win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+            console.error('Failed to load:', errorCode, errorDescription);
+        });
+
+        win.webContents.on('dom-ready', () => {
+            console.log('DOM Ready');
+            console.log('Current URL:', win.webContents.getURL());
+        });
+
+        // win.webContents.openDevTools()
+        win.loadFile(indexPath)
+    }
+}
+
+app.whenReady().then(createWindow)
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
+})
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+    }
+})

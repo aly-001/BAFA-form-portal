@@ -21,7 +21,7 @@ class SeaTableService {
   constructor() {
     this.accessToken = null;
     this.dtableServer = 'https://cloud.seatable.io/dtable-server/';
-    this.dtableUuid = 'f761eebb-877f-4d76-bff4-7353ddcf5dc7';
+    this.dtableUuid = import.meta.env.VITE_SEATABLE_BASE_UUID;
   }
 
   async initialize() {
