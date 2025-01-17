@@ -183,17 +183,6 @@ function FormViewer() {
     fillForm(false);
   };
 
-  const handleDangerousSubmit = () => {
-    setShowDetails(false);
-    if (
-      window.confirm(
-        "Are you sure you want to submit the form and download the PDF? This action cannot be undone."
-      )
-    ) {
-      fillForm(true);
-    }
-  };
-
   const handleMarkAsDone = async () => {
     if (!currentSubmission) return;
 
@@ -279,38 +268,6 @@ function FormViewer() {
             {translations[language === 'de' ? 'de' : 'en'].markAsDone}
           </button>
         )}
-      </div>
-
-      <div
-        style={{
-          marginTop: "24px",
-          marginBottom: "24px",
-          padding: "16px",
-          border: `2px dashed ${colors.danger || "#dc3545"}`,
-          borderRadius: "8px",
-        }}
-      >
-        <h3
-          style={{
-            color: colors.danger || "#dc3545",
-            margin: "0 0 12px 0",
-          }}
-        >
-          Test Zone
-        </h3>
-        <button
-          style={{
-            ...styles.button,
-            backgroundColor: colors.danger || "#dc3545",
-            opacity: currentSubmission ? 1 : 0.6,
-            cursor: currentSubmission ? "pointer" : "not-allowed",
-            marginBottom: 0,
-          }}
-          onClick={handleDangerousSubmit}
-          disabled={!currentSubmission}
-        >
-          {translations[language].submitAndDownload}
-        </button>
       </div>
 
       {currentSubmission && showDetails && (
