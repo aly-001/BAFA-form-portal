@@ -28,5 +28,7 @@ dist-ssr
 .env.*.local
 release
 dev-info.md
+.env*
+.env-test
 
 build-commands/build-commands.md

@@ -10,12 +10,8 @@ export function SubmissionProvider({ children }) {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const data = await seaTableService.getTableData();
-        const submissionData = data.map(record => ({
-          id: record._id,
-          ...record
-        }));
-        setSubmissions(submissionData);
+        const data = await seaTableService.getRowsWithoutTimestamp();
+        setSubmissions(data);
       } catch (err) {
         console.error('Error fetching submissions:', err);
       }

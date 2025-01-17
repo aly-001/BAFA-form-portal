@@ -1,3 +1,131 @@
+So this is the electron app that’s running this web view that lets me take data from sea table and automatically fill a form inside the app and so it has a functionality where I can click mark does it done and then it’s gonna add a timestamp to one of the fields in that row and so Then that row is not gonna appear in the initial drop-down so this kind of works except I would like you to change the implementation slightly where instead of filtering so that you don’t include that specific column if it’s filled, I’d like you to go to the actual sea table service And basically when you’re like initially getting all the contacts, just ignore the ones that have the timestamp so that we never see them and the way it’s gonna work cause it’s gonna reload and it’s gonna fetch everything and so make it really really robust that we don’t ever get contact with the date field filled.
+
+Here's the seatable service and the main ui
+
+import axios from 'axios';
+
+const BASE_URL = 'https://cloud.seatable.io';
+const AUTH_TOKEN = import.meta.env.VITE_SEATABLE_API_TOKEN;
+
+const log = (message, data) => {
+  if (process.env.NODE_ENV === 'development') {
+    if (data) {
+      console.log(message, data);
+    } else {
+      console.log(message);
+    }
+  }
+};
+
+if (!AUTH_TOKEN) {
+  throw new Error('VITE_SEATABLE_API_TOKEN is not defined in environment variables');
+}
+
+class SeaTableService {
+  constructor() {
+    this.accessToken = null;
+    this.dtableServer = 'https://cloud.seatable.io/dtable-server/';
+    this.dtableUuid = import.meta.env.VITE_SEATABLE_BASE_UUID;
+  }
+
+  async initialize() {
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${BASE_URL}/api/v2.1/dtable/app-access-token/`,
+        headers: {
+          accept: 'application/json',
+          authorization: `Bearer ${AUTH_TOKEN}`
+        }
+      });
+
+      this.accessToken = response.data.access_token;
+      this.dtableServer = response.data.dtable_server;
+    } catch (error) {
+      console.error('Failed to initialize SeaTable service:', error);
+      throw error;
+    }
+  }
+
+  async getTableData() {
+    if (!this.accessToken) {
+      await this.initialize();
+    }
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/rows/`,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
+        },
+        params: {
+          convert_keys: true,
+          table_name: 'Anträge BAFA ab 2023'
+        }
+      });
+      
+      return response.data.rows;
+    } catch (error) {
+      console.error('Failed to fetch table data:', error);
+      throw error;
+    }
+  }
+
+  async getMetadata() {
+    if (!this.accessToken) {
+      await this.initialize();
+    }
+
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/metadata/`,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
+        }
+      });
+      
+      // log('Available tables:', response.data.metadata.tables);
+      return response.data.metadata.tables;
+    } catch (error) {
+      console.error('Failed to fetch metadata:', error);
+      throw error;
+    }
+  }
+
+  async updateRow(rowId, updateData) {
+    if (!this.accessToken) {
+      await this.initialize();
+    }
+
+    try {
+      const response = await axios({
+        method: 'PUT',
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/rows/`,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
+        },
+        data: {
+          table_name: 'Anträge BAFA ab 2023',
+          row_id: rowId,
+          row: updateData
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update row:', error);
+      throw error;
+    }
+  }
+}
+
+export const seaTableService = new SeaTableService();
+
+
 import React, { useRef, useState, useEffect } from "react";
 import { useFormAutomation } from "./hooks/useFormAutomation";
 import Airtable from "airtable";
@@ -167,8 +295,10 @@ function FormViewer() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await seaTableService.getRowsWithoutTimestamp();
-        setSubmissions(data);
+        const data = await seaTableService.getTableData();
+        // Filter out rows that already have "beantragt am"
+        const filteredData = data.filter(row => !row["beantragt am"]);
+        setSubmissions(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -203,13 +333,20 @@ function FormViewer() {
         "beantragt am": currentDate,
       });
 
-      // Fetch only unmarked rows
-      const data = await seaTableService.getRowsWithoutTimestamp();
-      setSubmissions(data);
+      // Refetch data
+      const data = await seaTableService.getTableData();
+      const filteredData = data.filter(row => !row["beantragt am"]);
+      setSubmissions(filteredData);
       setCurrentSubmission(null);
       setShowMarkAsDone(false);
 
+      // Show success message before reload
       alert("Successfully marked as done!");
+
+      // Delay the reload to ensure SeaTable has time to persist the change
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error marking as done:", error);
       alert("Failed to mark as done. Please try again.");

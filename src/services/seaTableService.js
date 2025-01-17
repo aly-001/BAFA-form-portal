@@ -117,6 +117,13 @@ class SeaTableService {
       throw error;
     }
   }
+
+  async getRowsWithoutTimestamp() {
+    const allRows = await this.getTableData();
+    // print all rows that don't have a timestamp
+    console.log(allRows.filter(row => !row["beantragt am"]));
+    return allRows.filter(row => !row["beantragt am"]);
+  }
 }
 
 export const seaTableService = new SeaTableService();
