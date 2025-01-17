@@ -19,19 +19,11 @@ const log = (message, data) => {
 function FormViewer() {
   const webviewRef = useRef(null);
   const [isWebviewReady, setIsWebviewReady] = useState(false);
-  const { submissions, currentSubmission, setCurrentSubmission } =
-    useSubmissions();
+  const { submissions, setSubmissions, currentSubmission, setCurrentSubmission } = useSubmissions();
   const [delayMultiplier, setDelayMultiplier] = useState(1);
   const [language, setLanguage] = useState("en");
-
-  const { fillForm, debugDOM } = useFormAutomation(
-    webviewRef,
-    isWebviewReady,
-    currentSubmission,
-    delayMultiplier
-  );
   const [showDetails, setShowDetails] = useState(true);
-  const [tableData, setTableData] = useState([]);
+  const [showMarkAsDone, setShowMarkAsDone] = useState(false);
 
   const styles = {
     container: {
@@ -107,32 +99,16 @@ function FormViewer() {
     field: {
       margin: "4px 0",
     },
-    modal: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 1000,
-    },
-    modalContent: {
-      backgroundColor: colors.primaryBackground,
-      padding: "20px",
-      borderRadius: "8px",
-      maxWidth: "600px",
-      maxHeight: "80vh",
-      overflow: "auto",
-      color: colors.primaryText,
-    },
-    modalButtons: {
-      display: "flex",
-      gap: "10px",
-      justifyContent: "flex-end",
-      marginTop: "20px",
+    markDoneButton: {
+      padding: "8px 16px",
+      borderRadius: "6px",
+      border: "none",
+      backgroundColor: colors.success || '#28a745',
+      color: colors.secondaryBackground,
+      cursor: "pointer",
+      marginBottom: "16px",
+      marginLeft: "8px",
+      opacity: 1,
     },
   };
 
@@ -142,14 +118,23 @@ function FormViewer() {
       slowness: "Slowness",
       fillForm: "Fill Form",
       submitAndDownload: "Submit and Download PDF",
+      markAsDone: "Mark as Done",
     },
     de: {
       selectSubmission: "Einreichung auswählen",
       slowness: "Geschwindigkeit",
       fillForm: "Formular ausfüllen",
       submitAndDownload: "Absenden und PDF herunterladen",
+      markAsDone: "Als erledigt markieren",
     },
   };
+
+  const { fillForm, debugDOM } = useFormAutomation(
+    webviewRef,
+    isWebviewReady,
+    currentSubmission,
+    delayMultiplier
+  );
 
   useEffect(() => {
     if (webviewRef.current) {
@@ -182,11 +167,10 @@ function FormViewer() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tables = await seaTableService.getMetadata();
-        // console.log("Tables:", tables);
-        // Once we know the table name, we can fetch the actual data
-        // const data = await seaTableService.getTableData();
-        // setTableData(data);
+        const data = await seaTableService.getTableData();
+        // Filter out rows that already have "beantragt am"
+        const filteredData = data.filter(row => !row["beantragt am"]);
+        setSubmissions(filteredData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -197,6 +181,7 @@ function FormViewer() {
 
   const handleFillForm = () => {
     setShowDetails(false);
+    setShowMarkAsDone(true);
     fillForm(false);
   };
 
@@ -211,22 +196,52 @@ function FormViewer() {
     }
   };
 
+  const handleMarkAsDone = async () => {
+    if (!currentSubmission) return;
+
+    try {
+      const currentDate = new Date().toISOString().split('T')[0];
+      await seaTableService.updateRow(currentSubmission._id, {
+        "beantragt am": currentDate,
+      });
+
+      // Refetch data
+      const data = await seaTableService.getTableData();
+      const filteredData = data.filter(row => !row["beantragt am"]);
+      setSubmissions(filteredData);
+      setCurrentSubmission(null);
+      setShowMarkAsDone(false);
+
+      // Show success message before reload
+      alert("Successfully marked as done!");
+
+      // Delay the reload to ensure SeaTable has time to persist the change
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error("Error marking as done:", error);
+      alert("Failed to mark as done. Please try again.");
+    }
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.controlsRow}>
         <select
           style={styles.select}
-          onChange={(e) =>
-            setCurrentSubmission(
-              submissions.find((s) => s.id === e.target.value)
-            )
-          }
-          value={currentSubmission?.id || ""}
+          onChange={(e) => {
+            const selected = submissions.find((s) => s._id === e.target.value);
+            setCurrentSubmission(selected);
+          }}
+          value={currentSubmission?._id || ""}
         >
-          <option value="">{translations[language].selectSubmission}</option>
+          <option key="default" value="">
+            {translations[language].selectSubmission}
+          </option>
           {submissions.map((submission) => (
-            <option key={submission.id} value={submission.id}>
-              {`${submission.vorname} ${submission.nachname}`}
+            <option key={submission._id} value={submission._id}>
+              {`${submission.vorname || ''} ${submission.nachname || ''}`}
             </option>
           ))}
         </select>
@@ -253,16 +268,27 @@ function FormViewer() {
         </button>
       </div>
 
-      <button
-        style={{
-          ...styles.button,
-          width: 'fit-content',
-        }}
-        onClick={handleFillForm}
-        disabled={!currentSubmission}
-      >
-        {translations[language].fillForm}
-      </button>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <button
+          style={{
+            ...styles.button,
+            width: 'fit-content',
+          }}
+          onClick={handleFillForm}
+          disabled={!currentSubmission}
+        >
+          {translations[language].fillForm}
+        </button>
+
+        {showMarkAsDone && currentSubmission && (
+          <button
+            style={styles.markDoneButton}
+            onClick={handleMarkAsDone}
+          >
+            {translations[language === 'de' ? 'de' : 'en'].markAsDone}
+          </button>
+        )}
+      </div>
 
       <div
         style={{

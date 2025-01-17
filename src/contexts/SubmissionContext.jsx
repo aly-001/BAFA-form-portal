@@ -27,6 +27,7 @@ export function SubmissionProvider({ children }) {
   return (
     <SubmissionContext.Provider value={{ 
       submissions,
+      setSubmissions,
       currentSubmission,
       setCurrentSubmission
     }}>

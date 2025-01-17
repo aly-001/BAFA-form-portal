@@ -91,6 +91,32 @@ class SeaTableService {
       throw error;
     }
   }
+
+  async updateRow(rowId, updateData) {
+    if (!this.accessToken) {
+      await this.initialize();
+    }
+
+    try {
+      const response = await axios({
+        method: 'PUT',
+        url: `${this.dtableServer}api/v1/dtables/${this.dtableUuid}/rows/`,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${this.accessToken}`,
+        },
+        data: {
+          table_name: 'Anträge BAFA ab 2023',
+          row_id: rowId,
+          row: updateData
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update row:', error);
+      throw error;
+    }
+  }
 }
 
 export const seaTableService = new SeaTableService();
