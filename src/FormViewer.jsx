@@ -232,7 +232,7 @@ function FormViewer() {
           </option>
           {submissions.map((submission) => (
             <option key={submission._id} value={submission._id}>
-              {`${submission.vorname || ''} ${submission.nachname || ''}`}
+              {`${submission.vorname || ''} ${submission.nachname || ''} ${submission.name_organisation ? `- ${submission.name_organisation}` : ''}`}
             </option>
           ))}
         </select>
