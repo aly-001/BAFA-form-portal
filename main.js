@@ -3,8 +3,9 @@ const path = require('path')
 // Force production mode when packaged
 const isDev = !app.isPackaged
 
+// Simple log function that only logs in development mode
 const log = (...args) => {
-    if (!app.isPackaged) {  // Only log in development
+    if (!app.isPackaged) {
         console.log(...args);
     }
 };
@@ -18,20 +19,28 @@ function createWindow() {
             contextIsolation: false,
             webviewTag: true
         }
-    })
+    });
 
     // Enhanced download handler with popup management
     session.defaultSession.on('will-download', (event, item, webContents) => {
         log('Download initiated:', item.getURL());
-        
+
         // Get reference to the popup window that initiated the download
         const popup = BrowserWindow.fromWebContents(webContents);
-        
+
+        // Show a simple message in the popup
+        if (popup) {
+            popup.webContents.executeJavaScript(`
+                document.body.innerHTML = 
+                  '<h1 style="text-align:center; margin-top:3em;">Downloading file, do not close this popup</h1>';
+            `).catch((err) => console.error('Injection error:', err));
+        }
+
         // Get user's downloads directory
         const downloadsPath = app.getPath('downloads');
         const filename = item.getFilename();
         const savePath = path.join(downloadsPath, filename);
-        
+
         log('Saving to:', savePath);
         item.setSavePath(savePath);
 
@@ -80,13 +89,13 @@ function createWindow() {
     );
 
     if (isDev) {
-        win.loadURL('http://localhost:5173')
-        win.webContents.openDevTools()
+        win.loadURL('http://localhost:5173');
+        win.webContents.openDevTools();
     } else {
-        const indexPath = path.join(__dirname, 'dist', 'index.html')
-        console.log('Loading from:', indexPath)
-        console.log('Current directory:', __dirname)
-        console.log('File exists:', require('fs').existsSync(indexPath))
+        const indexPath = path.join(__dirname, 'dist', 'index.html');
+        console.log('Loading from:', indexPath);
+        console.log('Current directory:', __dirname);
+        console.log('File exists:', require('fs').existsSync(indexPath));
         
         win.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
             console.error('Failed to load:', errorCode, errorDescription);
@@ -97,21 +106,22 @@ function createWindow() {
             console.log('Current URL:', win.webContents.getURL());
         });
 
+        // Uncomment if you want the DevTools in production:
         // win.webContents.openDevTools()
-        win.loadFile(indexPath)
+        win.loadFile(indexPath);
     }
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
-})
+});
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
+        createWindow();
     }
-})
+});

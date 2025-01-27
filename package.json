@@ -23,6 +23,8 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.6.0",
     "@electron-forge/maker-dmg": "^7.6.0",
+    "@electron-forge/maker-squirrel": "^7.6.0",
+    "@electron-forge/maker-zip": "^7.6.0",
     "@electron/notarize": "^2.5.0",
     "@types/react": "^18.3.14",
     "@types/react-dom": "^18.3.2",
@@ -36,15 +38,22 @@
   },
   "build": {
     "appId": "com.bafa.formportal.app",
-    "productName": "Bafa Form Portal - Test",
+    "productName": "Bafa Form Portal",
     "mac": {
       "category": "public.app-category.utilities",
-      "hardenedRuntime": true,
+      "hardenedRuntime": false,
       "gatekeeperAssess": false,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist",
-      "identity": "E68153091B7352F1AA0ED2F602753B20A0819ED2",
       "notarize": false
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     },
     "files": [
       "dist/**/*",
